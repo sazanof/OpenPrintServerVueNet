@@ -1,0 +1,11 @@
+**/dist
+**/FileContentIndex
+**/.idea
+**/.vscode
+**/node_modules
+**/bin
+**/obj
+.git
+.vs
+**/wwwroot
+**/appsettings.json

@@ -1,0 +1,29 @@
+{
+  "name": "openprintservervuenet.client",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
+  },
+  "dependencies": {
+    "@mdi/font": "^7.4.47",
+    "axios": "^1.7.2",
+    "vue": "^3.4.21",
+    "vue-i18n": "^9.13.1",
+    "vue-router": "^4.3.2",
+    "vuex": "^4.0.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "eslint": "^8.57.0",
+    "eslint-plugin-vue": "^9.23.0",
+    "sass": "^1.77.2",
+    "vite": "^5.2.8",
+    "vite-plugin-vuetify": "^2.0.3",
+    "vuetify": "^3.6.7"
+  }
+}
