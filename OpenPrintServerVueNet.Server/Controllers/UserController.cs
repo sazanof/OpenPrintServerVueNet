@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OpenPrintServerVueNet.Server.Contexts;
 using OpenPrintServerVueNet.Server.Models;
 
 namespace OpenPrintServerVueNet.Server.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("/api/users")]
     public class UserController : ControllerBase

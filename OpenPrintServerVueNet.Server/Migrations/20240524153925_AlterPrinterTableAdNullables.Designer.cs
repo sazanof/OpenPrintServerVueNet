@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OpenPrintServerVueNet.Server.Contexts;
 
@@ -11,9 +12,11 @@ using OpenPrintServerVueNet.Server.Contexts;
 namespace OpenPrintServerVueNet.Server.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20240524153925_AlterPrinterTableAdNullables")]
+    partial class AlterPrinterTableAdNullables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -309,7 +312,7 @@ namespace OpenPrintServerVueNet.Server.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("Default")
+                    b.Property<bool>("Default")
                         .HasColumnType("bit");
 
                     b.Property<string>("Description")
@@ -318,7 +321,7 @@ namespace OpenPrintServerVueNet.Server.Migrations
                     b.Property<string>("DeviceID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<bool?>("Direct")
+                    b.Property<bool>("Direct")
                         .HasColumnType("bit");
 
                     b.Property<string>("DriverName")
@@ -333,7 +336,7 @@ namespace OpenPrintServerVueNet.Server.Migrations
                     b.Property<long?>("HorizontalResolution")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime?>("InstallDate")
+                    b.Property<DateTime>("InstallDate")
                         .HasColumnType("datetime2");
 
                     b.Property<bool?>("Local")

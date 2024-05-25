@@ -9,7 +9,13 @@ Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "openprintservervuenet.clien
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решения", "Элементы решения", "{77600772-6469-4EC7-83F5-98055B400D75}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E8E3B30E-B5EB-4C39-B5DB-6AA70E3E37B3}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
 Global

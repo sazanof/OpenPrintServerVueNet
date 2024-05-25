@@ -1,11 +1,11 @@
 <script>
 export default {
-name: "PrintJobs"
+    name: 'PrintJobs'
 }
 </script>
 
 <template>
-  $END$
+    print jobs
 </template>
 
 <style scoped lang="scss">

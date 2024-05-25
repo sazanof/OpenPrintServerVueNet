@@ -4,6 +4,9 @@ using OpenPrintServerVueNet.Classes.Spool;
 using OpenPrintServerVueNet.Server.Contexts;
 using System.Diagnostics;
 using System.Text.Json;
+using OpenPrintServerVueNet.Server.Hibs;
+using System;
+using Microsoft.AspNetCore.SignalR;
 
 namespace OpenPrintServerVueNet.Server.Services
 {
@@ -11,12 +14,14 @@ namespace OpenPrintServerVueNet.Server.Services
     {
 
         private readonly IServiceProvider _serviceProvider;
+        private readonly IHubContext<NotificationsHub> _notificationsHub;
 
         protected PrintServer? printServer = null;
 
-        public JobBackgroundService(IServiceProvider provider)
+        public JobBackgroundService(IServiceProvider provider, IHubContext<NotificationsHub> notificationsHub)
         {
             _serviceProvider = provider;
+            _notificationsHub = notificationsHub;
 
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -40,7 +45,7 @@ namespace OpenPrintServerVueNet.Server.Services
             }
         }
 
-        private void PrintServer_OnJobReiceved(PrintJobDTO job)
+        private async void PrintServer_OnJobReiceved(PrintJobDTO job)
         {
             try
             {
@@ -106,6 +111,7 @@ namespace OpenPrintServerVueNet.Server.Services
                     }
 
                     db.SaveChanges();
+                    await _notificationsHub.Clients.All.SendAsync("on.notification", JsonSerializer.Serialize(job));
                 }
             }
             catch (Exception ex)

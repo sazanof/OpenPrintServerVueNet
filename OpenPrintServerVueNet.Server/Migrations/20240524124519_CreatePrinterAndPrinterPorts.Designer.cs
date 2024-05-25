@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OpenPrintServerVueNet.Server.Contexts;
 
@@ -11,9 +12,11 @@ using OpenPrintServerVueNet.Server.Contexts;
 namespace OpenPrintServerVueNet.Server.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20240524124519_CreatePrinterAndPrinterPorts")]
+    partial class CreatePrinterAndPrinterPorts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -297,7 +300,7 @@ namespace OpenPrintServerVueNet.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<long?>("Attributes")
+                    b.Property<long>("Attributes")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Capabilities")
@@ -309,7 +312,7 @@ namespace OpenPrintServerVueNet.Server.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("Default")
+                    b.Property<bool>("Default")
                         .HasColumnType("bit");
 
                     b.Property<string>("Description")
@@ -318,25 +321,25 @@ namespace OpenPrintServerVueNet.Server.Migrations
                     b.Property<string>("DeviceID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<bool?>("Direct")
+                    b.Property<bool>("Direct")
                         .HasColumnType("bit");
 
                     b.Property<string>("DriverName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ExtendedPrinterStatus")
+                    b.Property<int>("ExtendedPrinterStatus")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("Hidden")
+                    b.Property<bool>("Hidden")
                         .HasColumnType("bit");
 
-                    b.Property<long?>("HorizontalResolution")
+                    b.Property<long>("HorizontalResolution")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime?>("InstallDate")
+                    b.Property<DateTime>("InstallDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool?>("Local")
+                    b.Property<bool>("Local")
                         .HasColumnType("bit");
 
                     b.Property<string>("Location")
@@ -345,7 +348,7 @@ namespace OpenPrintServerVueNet.Server.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("Network")
+                    b.Property<bool>("Network")
                         .HasColumnType("bit");
 
                     b.Property<string>("PaperSizesSupported")
@@ -363,19 +366,19 @@ namespace OpenPrintServerVueNet.Server.Migrations
                     b.Property<string>("PrinterPaperNames")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PrinterStatus")
+                    b.Property<int>("PrinterStatus")
                         .HasColumnType("int");
 
                     b.Property<string>("ShareName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("Shared")
+                    b.Property<bool>("Shared")
                         .HasColumnType("bit");
 
                     b.Property<string>("SystemName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("VerticalResolution")
+                    b.Property<long>("VerticalResolution")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");

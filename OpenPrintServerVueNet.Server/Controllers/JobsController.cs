@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OpenPrintServerVueNet.Models;
@@ -6,6 +7,7 @@ using OpenPrintServerVueNet.Server.Contexts;
 
 namespace OpenPrintServerVueNet.Server.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/jobs")]
     public class JobsController : ControllerBase

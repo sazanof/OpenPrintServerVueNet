@@ -53,7 +53,11 @@ namespace OpenPrintServerVueNet.Classes.Spool
                     PrintDeviceField.Printer_Name,
                     PrintDeviceField.Share_Name,
                     PrintDeviceField.Port_Name,
-                    PrintDeviceField.Comment
+                    PrintDeviceField.Comment,
+                    PrintDeviceField.Driver_Name,
+                    PrintDeviceField.Location,
+                    PrintDeviceField.Server_Name,
+                    PrintDeviceField.JobsQueued
                 }
 
             });
@@ -121,7 +125,7 @@ namespace OpenPrintServerVueNet.Classes.Spool
         private void ShowEvents(PrintWatcherEventArgs e)
         {
            // Console.WriteLine($@"TRIGGERED: {e.Cause} (Discarded: {e.Discarded})");
-           /* foreach (var Device in e.PrintDevices)
+           /*foreach (var Device in e.PrintDevices)
             {
                 Console.WriteLine($@"  Print Device #{Device.Key}");
                 ShowRecords(Device.Value.PrintDevice_Records.Values);

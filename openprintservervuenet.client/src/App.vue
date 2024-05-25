@@ -1,21 +1,25 @@
 <template>
     <VApp
         v-if="visible"
+        class="bg-blue-grey-lighten-5"
         full-height>
         <Installation v-if="installed !== null && !installed" />
         <Login v-else-if="installed && !authenticated" />
+        <Page v-else-if="installed && authenticated" />
     </VApp>
 </template>
 
 <script>
 import Installation from '@/components/chunks/Installation.vue'
 import Login from '@/components/pages/Login.vue'
+import Page from '@/components/pages/Page.vue'
 
 export default {
     name: 'App',
     components: {
         Login,
-        Installation
+        Installation,
+        Page
     },
     data() {
         return {

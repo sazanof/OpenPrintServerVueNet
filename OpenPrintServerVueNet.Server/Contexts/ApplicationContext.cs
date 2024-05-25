@@ -13,6 +13,10 @@ namespace OpenPrintServerVueNet.Server.Contexts
 
         public DbSet<Config> Config { get; set; }
 
+        public DbSet<Printer> Printers { get; set; }
+
+        public DbSet<PrinterPort> PrinterPorts { get; set; }
+
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
             //Database.EnsureCreated();   // создаем базу данных при первом обращении
@@ -21,6 +25,9 @@ namespace OpenPrintServerVueNet.Server.Contexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Printer>()
+                .HasMany(c => c.Ports)
+                .WithOne(o => o.Printer);
         }
 
     }

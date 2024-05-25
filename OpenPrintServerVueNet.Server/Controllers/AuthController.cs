@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OpenPrintServerVueNet.Server.Classes.DTO;
@@ -41,6 +42,13 @@ namespace OpenPrintServerVueNet.Server.Controllers
                 User = UserDTO.FromUser(currentUser)
             };
             return Ok(responce);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("login")]
+        public IActionResult LoginGet()
+        {
+            return Redirect("/");
         }
 
         [HttpPost("login")]

@@ -51,9 +51,17 @@ const vuetify = createVuetify({
             variant: 'outlined',
             hideDetails: true
         },
+        VAppBar: {
+            color: 'blue-grey-lighten-5',
+            VBtn: {
+                variant: 'flat',
+                color: 'blue-grey-darken-3',
+                rounded: 'sm'
+            }
+        },
         VBtn: {
             variant: 'flat',
-            color: 'blue-grey-darken-1'
+            color: 'cyan-darken-3'
         },
         VTable: {
             hover: true,
@@ -63,6 +71,21 @@ const vuetify = createVuetify({
             density: 'compact',
             variant: 'outlined',
             hideDetails: true
+        },
+        VListItem: {
+            VBtn: {
+                variant: 'text',
+                color: 'blue-grey-darken-3',
+                rounded: 'sm'
+            }
+        },
+        VNavigationDrawer: {
+            color: 'cyan-darken-3',
+            VBtn: {
+                variant: 'text',
+                color: 'white',
+                rounded: 'sm'
+            }
         }
     }
 })

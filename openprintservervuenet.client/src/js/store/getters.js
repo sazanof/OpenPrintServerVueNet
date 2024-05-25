@@ -12,5 +12,14 @@ export default {
     },
     isLoading(state) {
         return state.loading
+    },
+    getPrinters(state) {
+        return state.printers
+    },
+    getSignalR(state) {
+        return state.signal
+    },
+    isConnected(state) {
+        return state.connected
     }
 }

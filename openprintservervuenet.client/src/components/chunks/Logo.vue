@@ -20,7 +20,8 @@ export default {
 
 <style lang="scss" scoped>
 .logo {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     text-align: center;
 
     img {

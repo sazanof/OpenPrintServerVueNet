@@ -1,11 +1,13 @@
 <script>
 export default {
-name: "Dashboard"
+    name: 'Dashboard'
 }
 </script>
 
 <template>
-  $END$
+    <div class="dashboard">
+        dashboard
+    </div>
 </template>
 
 <style scoped lang="scss">

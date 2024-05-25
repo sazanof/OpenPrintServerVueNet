@@ -1,4 +1,6 @@
 import axios from 'axios'
+import * as signalR from '@microsoft/signalr'
+import { hu } from 'vuetify/locale'
 
 export default {
     /**
@@ -49,7 +51,7 @@ export default {
      * Log in user
      * @param commit
      * @param data
-     * @returns {Promise<axios.AxiosResponse<any>>}
+     * @returns {Promise<void>}
      */
     async logIn({ commit }, data) {
         commit('setLoading', true)
@@ -60,5 +62,55 @@ export default {
         }).finally(() => {
             commit('setLoading', false)
         })
+    },
+    /**
+     * Log out user
+     * @param commit
+     * @returns {Promise<void>}
+     */
+    async logOut({ commit }) {
+        commit('setLoading', true)
+        return await axios.post('/auth/logout').then(res => {
+            commit('setAuthenticated', false)
+            commit('setUser', null)
+            return res.data
+        }).finally(() => {
+            commit('setLoading', false)
+        })
+    },
+    async getPrinters({ commit }) {
+        commit('setLoading', true)
+
+        await axios.get('/api/printers').then(res => {
+            commit('setPrinters', res.data)
+        }).finally(() => {
+            commit('setLoading', false)
+        })
+    },
+    async syncPrinters({ commit }) {
+        commit('setLoading', true)
+
+        await axios.get('/api/printers/sync').then(res => {
+            commit('setPrinters', res.data)
+        }).finally(() => {
+            commit('setLoading', false)
+        })
+    },
+    createSignalR({ commit }) {
+        const hubConnection = new signalR.HubConnectionBuilder()
+            .withUrl('/notifications')
+            .build()
+        hubConnection.on('on.notification', function (job) {
+            console.log('SignalR new Job!', job)
+        })
+        hubConnection.start()
+            .then(() => {
+                commit('setConnected', true)
+                console.log('Connected to Hub success')
+            })
+            .catch(() => {
+                commit('setConnected', false)
+            })
+        commit('setSignalR', hubConnection)
     }
 }

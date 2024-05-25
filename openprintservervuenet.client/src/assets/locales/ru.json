@@ -2,11 +2,15 @@
   "Add": "Добавить",
   "Add administrator account": "Добавление аккаунта администратора",
   "Create account": "Создать аккаунт",
+  "Driver": "Драйвер",
   "Email": "Email",
   "Firstname": "Имя",
   "Lastname": "Фамилия",
   "Log in": "Войти",
+  "Open Print Server": "Open Print Server",
   "Password": "Пароль",
   "Password confirmation": "Подтверждение пароля",
+  "Printers": "Принтеры",
+  "Sync": "Синхронизировать",
   "Username": "Имя пользователя"
 }
