@@ -25,9 +25,13 @@ namespace OpenPrintServerVueNet.Server.Contexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Printer>()
                 .HasMany(c => c.Ports)
                 .WithOne(o => o.Printer);
+
+            modelBuilder.Entity<Job>()
+                .HasOne(j => j.Printer);
         }
 
     }

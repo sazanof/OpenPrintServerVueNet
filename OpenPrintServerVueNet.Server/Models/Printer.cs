@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OpenPrintServerVueNet.Models;
 using System.ComponentModel.DataAnnotations;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
@@ -64,6 +65,7 @@ namespace OpenPrintServerVueNet.Server.Models
         public UInt32? VerticalResolution { get; set; }
 
         public ICollection<PrinterPort>? Ports { get; set; }
+
 
         public Printer()
         {

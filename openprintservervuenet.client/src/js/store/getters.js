@@ -1,5 +1,3 @@
-import state from '@/js/store/state.js'
-
 export default {
     getAuthenticated(state) {
         return state.authenticated
@@ -21,5 +19,8 @@ export default {
     },
     isConnected(state) {
         return state.connected
+    },
+    getJobs(state) {
+        return state.jobs
     }
 }

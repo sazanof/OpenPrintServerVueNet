@@ -86,8 +86,14 @@ namespace OpenPrintServerVueNet.Server.Services
                         PagesTotal = (int)job.PagesTotal,
                         BytesPrinted = (int)job.BytesPrinted,
                         BytesTotal = (int)job.BytesTotal,
-                        Synced = false
+                        Synced = false,
                     };
+
+                    var printer = db.Printers.FirstOrDefault(p => p.Name == job.PrinterName && p.DriverName == job.DriverName);
+                    if(printer != null)
+                    {
+                        model.Printer = printer;
+                    }
 
                     var submitted = model.Submitted.Value;
 
@@ -97,7 +103,7 @@ namespace OpenPrintServerVueNet.Server.Services
                        j.Username == model.Username &&
                        j.JobId == model.JobId
                         );
-                    if (founded == null)
+                    if (founded == null && printer != null)
                     {
                         db.Jobs.Add(model);
                     }
@@ -106,12 +112,14 @@ namespace OpenPrintServerVueNet.Server.Services
                         founded.Status = (int)job.Status;
                         founded.StatusString = job.StatusString;
                         founded.Time = job.Time.ToString();
+                        founded.PagesTotal = (int)job.PagesTotal;
                         founded.PagesPrinted = (int)job.PagesPrinted;
+                        founded.BytesTotal = (int)job.BytesTotal;
                         founded.BytesPrinted = (int)job.BytesPrinted;
                     }
 
                     db.SaveChanges();
-                    await _notificationsHub.Clients.All.SendAsync("on.notification", JsonSerializer.Serialize(job));
+                    await _notificationsHub.Clients.All.SendAsync("on.job", JsonSerializer.Serialize(founded != null ? founded : model));
                 }
             }
             catch (Exception ex)

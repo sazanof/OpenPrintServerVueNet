@@ -4,6 +4,7 @@ export default {
     user: null,
     loading: false,
     printers: [],
+    jobs: [],
     signal: null,
     connected: false
 }

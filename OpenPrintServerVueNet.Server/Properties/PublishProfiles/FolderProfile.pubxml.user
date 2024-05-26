@@ -5,7 +5,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>C:\Users\Sazanof\source\repos\MGT\OpenPrintServerVueNet\OpenPrintServerVueNet.Server\bin\Release\net8.0\publish\</_PublishTargetUrl>
-    <History>True|2024-05-22T12:36:23.3883103Z||;True|2024-05-21T20:06:14.4492145+03:00||;</History>
+    <History>True|2024-05-26T16:25:22.2120898Z||;True|2024-05-22T15:36:23.3883103+03:00||;True|2024-05-21T20:06:14.4492145+03:00||;</History>
     <LastFailureDetails />
   </PropertyGroup>
 </Project>

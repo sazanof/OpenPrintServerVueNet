@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OpenPrintServerVueNet.Models;
+using OpenPrintServerVueNet.Server.Classes;
 using OpenPrintServerVueNet.Server.Contexts;
 
 namespace OpenPrintServerVueNet.Server.Controllers
@@ -20,10 +21,20 @@ namespace OpenPrintServerVueNet.Server.Controllers
         }
 
         // GET: JobsController
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Job>>> Get()
+        [HttpGet("page/{page}")]
+        public PaginationResults<Job> Get(int page)
         {
-            return await db.Jobs.ToListAsync();
+            return new PaginationResults<Job>(db.Jobs
+                .Include(j => j.Printer)
+                .OrderByDescending(j => j.Id), page, 50);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetJob(Int64 id)
+        {
+            return Ok(db.Jobs
+                .Include(j => j.Printer)
+                .FirstOrDefault(j => j.Id == id));
         }
     }
 }

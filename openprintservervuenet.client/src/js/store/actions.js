@@ -15,10 +15,10 @@ export default {
                 commit('setInstalled', res.data.isInstalled)
             }
             if (res.hasOwnProperty('user')) {
-                commit('setUser', res.data.user)
+                commit('setUser', res.data.User)
             }
             if (res.hasOwnProperty('authenticated')) {
-                commit('setAuthenticated', res.data.authenticated)
+                commit('setAuthenticated', res.data.Authenticated)
             }
         })
     },
@@ -30,8 +30,8 @@ export default {
     async checkAuth({ commit }) {
         commit('setLoading', true)
         const res = await axios.get('/auth/check').then(res => {
-            commit('setAuthenticated', res.data.authenticated)
-            commit('setUser', res.data.user)
+            commit('setAuthenticated', res.data.Authenticated)
+            commit('setUser', res.data.User)
             return res.data
         }).catch(e => {
             if (e.response.status === 403 && e.response.data.hasOwnProperty('isInstalled')) {
@@ -56,8 +56,8 @@ export default {
     async logIn({ commit }, data) {
         commit('setLoading', true)
         return await axios.post('/auth/login', data).then(res => {
-            commit('setAuthenticated', res.data.authenticated)
-            commit('setUser', res.data.user)
+            commit('setAuthenticated', res.data.Authenticated)
+            commit('setUser', res.data.User)
             return res.data
         }).finally(() => {
             commit('setLoading', false)
@@ -100,17 +100,25 @@ export default {
         const hubConnection = new signalR.HubConnectionBuilder()
             .withUrl('/notifications')
             .build()
-        hubConnection.on('on.notification', function (job) {
-            console.log('SignalR new Job!', job)
+        hubConnection.on('on.job', function (job) {
+            const _job = JSON.parse(job)
+            commit('addJob', _job)
         })
         hubConnection.start()
             .then(() => {
                 commit('setConnected', true)
-                console.log('Connected to Hub success')
             })
             .catch(() => {
                 commit('setConnected', false)
             })
         commit('setSignalR', hubConnection)
+    },
+    async getJobs({ commit }, page = 1) {
+        commit('setLoading', true)
+        await axios.get(`/api/jobs/page/${page}`).then(res => {
+            commit('setJobs', res.data)
+        }).finally(() => {
+            commit('setLoading', false)
+        })
     }
 }

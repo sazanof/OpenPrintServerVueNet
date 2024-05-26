@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OpenPrintServerVueNet.Server.Contexts;
 
@@ -11,9 +12,11 @@ using OpenPrintServerVueNet.Server.Contexts;
 namespace OpenPrintServerVueNet.Server.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20240526172343_AlterJobsAddPrinter")]
+    partial class AlterJobsAddPrinter
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -542,7 +545,7 @@ namespace OpenPrintServerVueNet.Server.Migrations
             modelBuilder.Entity("OpenPrintServerVueNet.Models.Job", b =>
                 {
                     b.HasOne("OpenPrintServerVueNet.Server.Models.Printer", "Printer")
-                        .WithMany("Jobs")
+                        .WithMany()
                         .HasForeignKey("PrinterId");
 
                     b.Navigation("Printer");
@@ -559,8 +562,6 @@ namespace OpenPrintServerVueNet.Server.Migrations
 
             modelBuilder.Entity("OpenPrintServerVueNet.Server.Models.Printer", b =>
                 {
-                    b.Navigation("Jobs");
-
                     b.Navigation("Ports");
                 });
 #pragma warning restore 612, 618

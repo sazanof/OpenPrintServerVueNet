@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OpenPrintServerVueNet.Server.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -59,7 +60,7 @@ namespace OpenPrintServerVueNet.Models
         public int? Position { get; set; }
 
         [DataType(DataType.DateTime)]
-        public DateTime? Submitted { get; set; }
+        public DateTimeOffset? Submitted { get; set; }
 
         public string? Time { get; set; }
 
@@ -72,5 +73,7 @@ namespace OpenPrintServerVueNet.Models
         public int? BytesPrinted { get; set; }
 
         public bool? Synced { get; set; }
+
+        public Printer? Printer { get; set; }
     }
 }

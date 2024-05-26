@@ -19,5 +19,20 @@ export default {
     },
     setConnected(state, connected) {
         state.connected = connected
+    },
+    setJobs(state, jobs) {
+        state.jobs = jobs
+    },
+    addJob(state, job) {
+        let existingIndex = state.jobs.Results.findIndex(j => j.Id === job.Id)
+        if (existingIndex === -1) {
+            state.jobs.Results.unshift(job)
+        } else {
+            state.jobs.Results[existingIndex] = job
+            console.log('update job', job, existingIndex)
+        }
+    },
+    deleteJob(state, job) {
+        state.jobs.Results.splice(state.jobs.Results.indexOf(job), 1)
     }
 }

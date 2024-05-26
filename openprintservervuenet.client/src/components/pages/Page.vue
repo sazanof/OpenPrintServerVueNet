@@ -9,8 +9,8 @@ export default {
         AppHeader
     },
     computed: {
-        signal() {
-            return this.$store.getters['getSignalR']
+        loading() {
+            return this.$store.getters['isLoading']
         }
     },
     created() {
@@ -25,14 +25,20 @@ export default {
         <AppNavigationDrawer />
         <AppHeader />
         <VLayout
-            class="pa-4"
+            class="pa-4 page-layout"
             full-height>
             <VSheet
                 rounded
                 color="bg-blue-grey-lighten-5"
-                class="pa-6"
+                class="pa-6 layout-sheet"
                 height="100%"
                 width="100%">
+                <VProgressLinear
+                    :active="loading"
+                    indeterminate
+                    height="4"
+                    color="blue-grey-darken-3"
+                    class="progress-bar" />
                 <router-view />
             </VSheet>
         </VLayout>
@@ -40,11 +46,17 @@ export default {
 </template>
 
 <style scoped lang="scss">
-.content {
-    position: absolute;
-    left: 10px;
-    top: 10px;
-    right: 10px;
-    bottom: 10px;
+
+.layout-sheet {
+    position: relative;
+
+    .progress-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 11;
+    }
 }
+
 </style>

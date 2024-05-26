@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OpenPrintServerVueNet.Server.Contexts;
 
@@ -11,9 +12,11 @@ using OpenPrintServerVueNet.Server.Contexts;
 namespace OpenPrintServerVueNet.Server.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20240526155426_AlterJobsAddDateTimeOffset")]
+    partial class AlterJobsAddDateTimeOffset
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -198,9 +201,6 @@ namespace OpenPrintServerVueNet.Server.Migrations
                     b.Property<int?>("Position")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PrinterId")
-                        .HasColumnType("int");
-
                     b.Property<string>("PrinterName")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -256,8 +256,6 @@ namespace OpenPrintServerVueNet.Server.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("JobId");
-
-                    b.HasIndex("PrinterId");
 
                     b.HasIndex("Status");
 
@@ -539,15 +537,6 @@ namespace OpenPrintServerVueNet.Server.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("OpenPrintServerVueNet.Models.Job", b =>
-                {
-                    b.HasOne("OpenPrintServerVueNet.Server.Models.Printer", "Printer")
-                        .WithMany("Jobs")
-                        .HasForeignKey("PrinterId");
-
-                    b.Navigation("Printer");
-                });
-
             modelBuilder.Entity("OpenPrintServerVueNet.Server.Models.PrinterPort", b =>
                 {
                     b.HasOne("OpenPrintServerVueNet.Server.Models.Printer", "Printer")
@@ -559,8 +548,6 @@ namespace OpenPrintServerVueNet.Server.Migrations
 
             modelBuilder.Entity("OpenPrintServerVueNet.Server.Models.Printer", b =>
                 {
-                    b.Navigation("Jobs");
-
                     b.Navigation("Ports");
                 });
 #pragma warning restore 612, 618
