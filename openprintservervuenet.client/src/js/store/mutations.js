@@ -34,5 +34,17 @@ export default {
     },
     deleteJob(state, job) {
         state.jobs.Results.splice(state.jobs.Results.indexOf(job), 1)
+    },
+    setLastError(state, lastError) {
+        state.lastError = lastError
+    },
+    setConfig(state, config) {
+        state.config = config
+    },
+    addNotification(state, notification) {
+        state.notifications.push(notification)
+    },
+    removeNotification(state, notification) {
+        state.notifications = state.notifications.filter(n => n.active === true)
     }
 }

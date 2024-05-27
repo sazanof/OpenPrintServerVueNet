@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+//https://learn.microsoft.com/en-us/dotnet/api/system.printing.printjobstatus?view=windowsdesktop-8.0
 namespace OpenPrintServerVueNet.Classes.Spool.Native.NotifyInfo {
     [Flags]
     public enum PrintJobStatus {

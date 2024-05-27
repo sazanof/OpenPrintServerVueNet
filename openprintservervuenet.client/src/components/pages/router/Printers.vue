@@ -1,5 +1,6 @@
 <script>
 import PageTemplate from '@/components/pages/PageTemplate.vue'
+import { createSuccessNotification } from '@/js/helpers/notificationHelper.js'
 
 export default {
     name: 'Printers',
@@ -16,6 +17,13 @@ export default {
     },
     created() {
         this.$store.dispatch('getPrinters')
+    },
+    methods: {
+        async sync() {
+            await this.$store.dispatch('syncPrinters').then(() => {
+                this.$store.commit('addNotification', createSuccessNotification(this.$t('Synced')))
+            })
+        }
     }
 }
 </script>
@@ -30,22 +38,22 @@ export default {
                     :value="printer"
                     lines="three">
                     <template #title>
-                        {{ printer.name }}
+                        {{ printer.Name }}
                     </template>
                     <template #subtitle>
                         <div class="driver">
-                            {{ $t('Driver') }}: {{ printer.driverName }}
+                            {{ $t('Driver') }}: {{ printer.DriverName }}
                         </div>
                         <div
-                            v-if="printer.ports"
+                            v-if="printer.Ports"
                             class="ports">
                             <VChip
-                                v-for="port in printer.ports"
-                                :key="port.id"
+                                v-for="port in printer.Ports"
+                                :key="port.Id"
                                 class="mt-2 mr-2"
                                 density="compact"
                                 color="success"
-                                :text="port.name">
+                                :text="port.Name">
                                 <template #prepend>
                                     <VIcon icon="mdi-ip" />
                                 </template>
@@ -53,7 +61,6 @@ export default {
                         </div>
                     </template>
                     <template #append>
-                        <VBtn icon="mdi-pencil" />
                         <VBtn
                             icon="mdi-trash-can"
                             color="error" />
@@ -67,7 +74,7 @@ export default {
                 :loading="loading"
                 :text="$t('Sync')"
                 prepend-icon="mdi-sync"
-                @click="$store.dispatch('syncPrinters')" />
+                @click="sync" />
         </template>
     </PageTemplate>
 </template>

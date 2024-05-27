@@ -1,4 +1,5 @@
 <script>
+import Notifications from '@/components/chunks/Notifications.vue'
 import AppHeader from '@/components/chunks/AppHeader.vue'
 import AppNavigationDrawer from '@/components/chunks/AppNavigationDrawer.vue'
 
@@ -6,14 +7,16 @@ export default {
     name: 'Page',
     components: {
         AppNavigationDrawer,
-        AppHeader
+        AppHeader,
+        Notifications
     },
     computed: {
         loading() {
             return this.$store.getters['isLoading']
         }
     },
-    created() {
+    async created() {
+        await this.$store.dispatch('getConfig')
         this.$store.dispatch('createSignalR')
     }
 
@@ -42,6 +45,7 @@ export default {
                 <router-view />
             </VSheet>
         </VLayout>
+        <Notifications />
     </VMain>
 </template>
 

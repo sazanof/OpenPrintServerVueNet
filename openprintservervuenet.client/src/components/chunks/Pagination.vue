@@ -22,13 +22,13 @@ export default {
     },
     computed: {
         total() {
-            return this.paginationResults.totalPages
+            return this.paginationResults.TotalPages
         }
     },
     created() {
-        this.pageNumber = this.paginationResults?.pageNumber
-        this.pageSize = this.paginationResults?.pageSize
-        this.totalItems = this.paginationResults?.totalItems
+        this.pageNumber = this.paginationResults?.PageNumber
+        this.pageSize = this.paginationResults?.PageSize
+        this.totalItems = this.paginationResults?.TotalItems
     },
     methods: {
         switchPage(page) {

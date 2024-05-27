@@ -1,4 +1,5 @@
 export default {
+    lastError: null,
     installed: false,
     authenticated: false,
     user: null,
@@ -6,5 +7,7 @@ export default {
     printers: [],
     jobs: [],
     signal: null,
-    connected: false
+    connected: false,
+    config: null,
+    notifications: []
 }

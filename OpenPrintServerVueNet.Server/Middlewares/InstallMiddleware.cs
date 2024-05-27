@@ -15,21 +15,26 @@ namespace OpenPrintServerVueNet.Server.Middlewares
 
         public async Task InvokeAsync(HttpContext httpContext, ApplicationContext applicationContext)
         {
-            if (!httpContext.Request.Path.StartsWithSegments("/api/install")) {
-                var isInstalled = applicationContext.Config.FirstOrDefault(conf => conf.Key == ConfigEnum.IsInstalled);
-                if (isInstalled == null || isInstalled.Value != "true")
+            if (httpContext.Request.Path != new PathString("/"))
+            {
+                if (!httpContext.Request.Path.StartsWithSegments("/api/install"))
                 {
-                    httpContext.Response.StatusCode = 403;
-                    await httpContext.Response.WriteAsJsonAsync(
-                        new AppNotInstalledDTO()
-                        {
-                            IsInstalled = false,
-                            Error = "Application is not installed"
-                        });
-                    return;
+                    var isInstalled = applicationContext.Config.FirstOrDefault(conf => conf.Key == ConfigEnum.IsInstalled);
+                    if (isInstalled == null || isInstalled.Value != "true")
+                    {
+                        httpContext.Response.StatusCode = 403;
+                        await httpContext.Response.WriteAsJsonAsync(
+                            new AppNotInstalledDTO()
+                            {
+                                IsInstalled = false,
+                                Error = "Application is not installed"
+                            });
+                        return;
+                    }
                 }
             }
             
+
 
             await _next(httpContext);
         }

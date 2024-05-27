@@ -6,6 +6,10 @@
         <Installation v-if="installed !== null && !installed" />
         <Login v-else-if="installed && !authenticated" />
         <Page v-else-if="installed && authenticated" />
+        <ErrorPage
+            v-else
+            :exception="exception"
+            :text="$t('Error when loading application. Check database connection or application logs.')" />
     </VApp>
 </template>
 
@@ -13,10 +17,12 @@
 import Installation from '@/components/chunks/Installation.vue'
 import Login from '@/components/pages/Login.vue'
 import Page from '@/components/pages/Page.vue'
+import ErrorPage from '@/components/chunks/ErrorPage.vue'
 
 export default {
     name: 'App',
     components: {
+        ErrorPage,
         Login,
         Installation,
         Page

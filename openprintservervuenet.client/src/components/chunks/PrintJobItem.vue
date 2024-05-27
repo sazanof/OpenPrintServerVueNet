@@ -1,7 +1,8 @@
 <script>
 import formatBytes from '@/js/helpers/formatBytes.js'
 import PaletteIcon from '@/components/chunks/PaletteIcon.vue'
-import { useDate } from 'vuetify'
+import { printerStatus } from '@/js/helpers/printerStatus.js'
+import moment from 'moment'
 
 export default {
     name: 'PrintJobItem',
@@ -19,8 +20,8 @@ export default {
     },
     computed: {
         submitted() {
-            const date = useDate()
-            return date.format(this.job.Submitted, 'fullDateTime24h')
+            console.log(new Date(this.job.Submitted))
+            return moment(this.job.Submitted).format('D.M.YYYY H:mm:ss')
         },
         bytesTotal() {
             return formatBytes(this.job.BytesTotal)
@@ -28,7 +29,8 @@ export default {
         bytesPrinted() {
             return formatBytes(this.job.BytesPrinted)
         }
-    }
+    },
+    methods: { printerStatus }
 }
 </script>
 
@@ -78,13 +80,88 @@ export default {
     </tr>
     <tr v-if="more">
         <td colspan="9">
-            <code>
-                <pre>{{ job }}</pre>
-            </code>
+            <div class="job-info pa-4">
+                <div class="job-info-item">
+                    <strong>Id</strong>: <span>{{ job.Id }}</span>
+                </div>
+                <div class="job-info-item">
+                    <strong>{{ $t('Job ID') }}</strong>: <span>{{ job.JobId }}</span>
+                </div>
+                <div class="job-info-item">
+                    <strong>{{ $t('Printer name') }}</strong>: <span>{{ job.PrinterName }}</span>
+                </div>
+                <div class="job-info-item">
+                    <strong>{{ $t('Machine name') }}</strong>: <span>{{ job.MachineName }}</span>
+                </div>
+                <div class="job-info-item">
+                    <strong>{{ $t('Username') }}</strong>: <span>{{ job.Username }}</span>
+                </div>
+                <div class="job-info-item">
+                    <strong>{{ $t('Driver') }}</strong>: <span>{{ job.DriverName }}</span>
+                </div>
+                <div class="job-info-item">
+                    <strong>{{ $t('Orientation') }}</strong>: <span>{{
+                        job.Printer_Orientation
+                    }}</span>
+                </div>
+                <div class="job-info-item">
+                    <strong>{{ $t('Paper size') }}</strong>: <span>{{ job.Printer_Paper_Size }}</span>
+                </div>
+                <div class="job-info-item">
+                    <strong>{{ $t('Copies') }}</strong>: <span>{{ job.Printer_Copies }}</span>
+                </div>
+                <div class="job-info-item">
+                    <strong>{{ $t('Color') }}</strong>: <span>{{ job.Printer_Palette }}</span>
+                </div>
+                <div class="job-info-item">
+                    <strong>{{ $t('Status') }}</strong>: <span>{{ printerStatus(job.Status) }}</span>
+                </div>
+                <div class="job-info-item">
+                    <strong>{{ $t('Document') }}</strong>: <span>{{ job.Document }}</span>
+                </div>
+                <div class="job-info-item">
+                    <strong>{{ $t('Priority') }}</strong>: <span>{{ job.Priority }}</span>
+                </div>
+                <div class="job-info-item">
+                    <strong>{{ $t('Position') }}</strong>: <span>{{ job.Position }}</span>
+                </div>
+                <div class="job-info-item">
+                    <strong>{{ $t('Submitted') }}</strong>: <span>{{ submitted }}</span>
+                </div>
+                <div class="job-info-item">
+                    <strong>{{ $t('Time') }}</strong>: <span>{{ job.Time }}</span>
+                </div>
+                <div class="job-info-item">
+                    <strong>{{ $t('Pages total') }}</strong>: <span>{{ job.PagesTotal }}</span>
+                </div>
+                <div class="job-info-item">
+                    <strong>{{ $t('Pages printed') }}</strong>: <span>{{ job.PagesPrinted }}</span>
+                </div>
+                <div class="job-info-item">
+                    <strong>{{ $t('Size total') }}</strong>:
+                    <span>{{ bytesTotal.num }} {{ bytesPrinted.size }}</span>
+                </div>
+                <div class="job-info-item">
+                    <strong>{{ $t('Size printed') }}</strong>:
+                    <span>{{ bytesPrinted.num }} {{ bytesPrinted.size }}</span>
+                </div>
+
+                <div class="job-info-item">
+                    <strong>{{ $t('Synced') }}</strong>: <span>
+                        <VIcon
+                            v-if="job.Synced"
+                            icon="mdi-check"
+                            color="success" />
+                        <VIcon
+                            v-else
+                            icon="mdi-close"
+                            color="error" />
+                    </span>
+                </div>
+            </div>
         </td>
     </tr>
 </template>
-
 <style scoped lang="scss">
 .document {
     width: 250px;

@@ -7,6 +7,7 @@ using System.Text.Json;
 using OpenPrintServerVueNet.Server.Hibs;
 using System;
 using Microsoft.AspNetCore.SignalR;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace OpenPrintServerVueNet.Server.Services
 {
@@ -59,6 +60,13 @@ namespace OpenPrintServerVueNet.Server.Services
                 {
                     Console.WriteLine("Triggered by background job {0}", job.Id);
 
+                    var s = job.Submitted;
+                    var _submitted = DateTime.SpecifyKind(s,DateTimeKind.Utc);
+
+                    var _submittedModify = s.ToLocalTime();// !!!!!!!
+
+
+
                     Job model = new Job()
                     {
                         JobId = job.Id,
@@ -78,7 +86,7 @@ namespace OpenPrintServerVueNet.Server.Services
                         Status = (int)job.Status,
                         StatusString = job.StatusString,
                         Document = job.Document,
-                        Submitted = job.Submitted,
+                        Submitted = _submittedModify,
                         Time = job.Time.ToString(),
                         Priority = (int)job.Priority,
                         Position = (int)job.Position,
@@ -89,7 +97,7 @@ namespace OpenPrintServerVueNet.Server.Services
                         Synced = false,
                     };
 
-                    var printer = db.Printers.FirstOrDefault(p => p.Name == job.PrinterName && p.DriverName == job.DriverName);
+                     var printer = db.Printers.FirstOrDefault(p => p.Name == job.PrinterName && p.DriverName == job.DriverName);
                     if(printer != null)
                     {
                         model.Printer = printer;

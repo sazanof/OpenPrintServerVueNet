@@ -5,7 +5,18 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>C:\Users\Sazanof\source\repos\MGT\OpenPrintServerVueNet\OpenPrintServerVueNet.Server\bin\Release\net8.0\publish\</_PublishTargetUrl>
-    <History>True|2024-05-26T16:25:22.2120898Z||;True|2024-05-22T15:36:23.3883103+03:00||;True|2024-05-21T20:06:14.4492145+03:00||;</History>
+    <History>True|2024-05-27T09:25:42.9394638Z||;False|2024-05-27T12:18:37.7730621+03:00||;True|2024-05-27T12:12:08.3723308+03:00||;True|2024-05-27T10:40:03.0485731+03:00||;True|2024-05-27T10:32:32.8358638+03:00||;True|2024-05-27T10:27:20.6674966+03:00||;True|2024-05-27T10:24:40.9924271+03:00||;True|2024-05-27T10:02:51.2754250+03:00||;True|2024-05-26T19:25:22.2120898+03:00||;True|2024-05-22T15:36:23.3883103+03:00||;True|2024-05-21T20:06:14.4492145+03:00||;</History>
     <LastFailureDetails />
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
   </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DefaultConnection">
+      <Value>Server=localhost%3bDatabase=Print%3bUser Id=user%3bPassword=password%3bEncrypt=True%3bTrustServerCertificate=True</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+  <ItemGroup>
+    <EFMigrations Include="OpenPrintServerVueNet.Server.Contexts.ApplicationContext">
+      <Value>Server=localhost%3bDatabase=Print%3bUser Id=user%3bPassword=password%3bEncrypt=True%3bTrustServerCertificate=True</Value>
+    </EFMigrations>
+  </ItemGroup>
 </Project>

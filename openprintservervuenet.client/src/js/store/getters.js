@@ -1,3 +1,5 @@
+import state from '@/js/store/state.js'
+
 export default {
     getAuthenticated(state) {
         return state.authenticated
@@ -22,5 +24,14 @@ export default {
     },
     getJobs(state) {
         return state.jobs
+    },
+    getLastError(state) {
+        return state.lastError
+    },
+    getConfig(state) {
+        return state.config
+    },
+    getNotifications(state) {
+        return state.notifications
     }
 }

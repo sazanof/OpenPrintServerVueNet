@@ -38,6 +38,7 @@ export default {
                 commit('setInstalled', e.response.data.isInstalled)
             } else {
                 commit('setInstalled', null) //TODO throw error if 500 status
+                commit('setLastError', e.response)
             }
         }).finally(() => {
             commit('setLoading', false)
@@ -90,8 +91,9 @@ export default {
     async syncPrinters({ commit }) {
         commit('setLoading', true)
 
-        await axios.get('/api/printers/sync').then(res => {
+        return await axios.get('/api/printers/sync').then(res => {
             commit('setPrinters', res.data)
+            return res.data
         }).finally(() => {
             commit('setLoading', false)
         })
@@ -111,12 +113,32 @@ export default {
             .catch(() => {
                 commit('setConnected', false)
             })
+        hubConnection.onclose(function () {
+            commit('setConnected', false)
+        })
         commit('setSignalR', hubConnection)
     },
     async getJobs({ commit }, page = 1) {
         commit('setLoading', true)
         await axios.get(`/api/jobs/page/${page}`).then(res => {
             commit('setJobs', res.data)
+        }).finally(() => {
+            commit('setLoading', false)
+        })
+    },
+    async getConfig({ commit }) {
+        commit('setLoading', true)
+        await axios.get('/api/config').then(res => {
+            commit('setConfig', res.data)
+        }).finally(() => {
+            commit('setLoading', false)
+        })
+    },
+    async saveConfig({ commit }, data) {
+        commit('setLoading', true)
+        await axios.post('/api/config', data).then(res => {
+            commit('setConfig', res.data)
+            return res.data
         }).finally(() => {
             commit('setLoading', false)
         })
