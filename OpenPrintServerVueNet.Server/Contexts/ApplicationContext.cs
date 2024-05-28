@@ -17,6 +17,10 @@ namespace OpenPrintServerVueNet.Server.Contexts
 
         public DbSet<PrinterPort> PrinterPorts { get; set; }
 
+        public DbSet<SnmpVariable> SnmpVariables { get; set; }
+
+        public DbSet<SnmpValue> SnmpValues { get; set; }
+
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
             //Database.EnsureCreated();   // создаем базу данных при первом обращении

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Humanizer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OpenPrintServerVueNet.Server.Classes.DTO;
 using OpenPrintServerVueNet.Server.Contexts;
@@ -15,17 +16,30 @@ namespace OpenPrintServerVueNet.Server.Controllers
     public class InstallController : Controller
     {
         ApplicationContext db;
+        RoleManager<IdentityRole> _roleManager;
+        UserManager<User> _userManager;
 
-        public InstallController(ApplicationContext context)
+        public InstallController(
+            ApplicationContext context,
+            RoleManager<IdentityRole> roleManager,
+            UserManager<User> userManager
+            )
         {
             db = context;
+            _roleManager = roleManager;
+            _userManager = userManager;
         }
 
         [HttpPost]
-        public IActionResult InstallApp(InstallPayload data)
+        public async Task<IActionResult> InstallApp(InstallPayload data)
         {
+            User _user;
+
+            createRoles();
+
             // Create a user
             var hasher = new PasswordHasher<User>();
+
             var user = new User()
             {
                 UserName = data.Username,
@@ -34,46 +48,93 @@ namespace OpenPrintServerVueNet.Server.Controllers
                 Firstname = data.Firstname,
                 Lastname = data.Lastname
             };
+
             var current = db.Users.FirstOrDefault(u => u.UserName == data.Username);
             if (current == null)
             {
                 db.Users.Add(user);
+                await db.SaveChangesAsync();
 
-                var dto = new UserDTO()
-                {
-                    Id = user.Id,
-                    UserName = user.UserName,
-                    FirstName = user.Firstname,
-                    LastName = user.Lastname,
-                    Email = user.Email
-                };
+                await _userManager.AddToRoleAsync(user, RoleEnum.Admin);
+                await _userManager.AddToRoleAsync(user, RoleEnum.Statist);
+                await _userManager.AddToRoleAsync(user, RoleEnum.Viewer);
 
-                // Clear Config
-                db.Config.RemoveRange(db.Config.ToList()); // ? or not delete
-                                                           // Add Config
-                var conf = new List<Config>()
+                _user = user;
+            }
+            else
+            {
+                current.Firstname = user.Firstname;
+                current.Lastname = user.Lastname;
+                current.PasswordHash = user.PasswordHash;
+                current.Email = user.Email;
+                await db.SaveChangesAsync();
+
+                await _userManager.AddToRoleAsync(current, RoleEnum.Admin);
+                await _userManager.AddToRoleAsync(current, RoleEnum.Statist);
+                await _userManager.AddToRoleAsync(current, RoleEnum.Viewer);
+
+                _user = current;
+            }
+
+           
+
+            // Clear Config
+            db.Config.RemoveRange(db.Config.ToList()); // ? or not delete
+                                                       // Add Config
+            var conf = new List<Config>()
                 {
                     new Config() { Key = ConfigEnum.IsInstalled, Value = "true"},
                     new Config() { Key = ConfigEnum.InstallDate, Value = DateTime.Now.ToString()},
                 };
 
-                var missing = conf.Where(x => !db.Config.Any(z => z.Key == x.Key)).ToList();
-                db.Config.AddRange(missing);
+            //var missing = conf.Where(x => !db.Config.Any(z => z.Key == x.Key)).ToList();
 
-                db.SaveChanges();
+            db.Config.AddRange(conf);
 
-                var res = new AppInstalledDTO()
-                {
-                    Authenticated = false,
-                    User = dto,
-                    IsInstalled = true,
-                };
+            await db.SaveChangesAsync();
 
-                return Ok(res);
+            var dto = new UserDTO()
+            {
+                Id = _user.Id,
+                UserName = _user.UserName,
+                FirstName = _user.Firstname,
+                LastName = _user.Lastname,
+                Email = _user.Email
+            };
+
+            var res = new AppInstalledDTO()
+            {
+                Authenticated = false,
+                User = dto,
+                IsInstalled = true,
+            };
+
+            return Ok(res);
+
+        }
+
+        private async void createRoles()
+        {
+            var adminRole = await _roleManager.FindByNameAsync(RoleEnum.Admin);
+
+            if (adminRole == null)
+            {
+                await _roleManager.CreateAsync(new IdentityRole(RoleEnum.Admin));
             }
 
-            return BadRequest();
+            var statistRole = await _roleManager.FindByNameAsync(RoleEnum.Statist);
 
+            if (statistRole == null)
+            {
+                await _roleManager.CreateAsync(new IdentityRole(RoleEnum.Statist));
+            }
+
+            var viewerRole = await _roleManager.FindByNameAsync(RoleEnum.Viewer);
+
+            if (viewerRole == null)
+            {
+                await _roleManager.CreateAsync(new IdentityRole(RoleEnum.Viewer));
+            }
         }
     }
 }

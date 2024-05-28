@@ -11,13 +11,13 @@ export default {
      */
     async install({ commit }, data) {
         return await axios.post('/api/install', data).then(res => {
-            if (res.data.hasOwnProperty('isInstalled')) {
-                commit('setInstalled', res.data.isInstalled)
+            if (res.data.hasOwnProperty('IsInstalled')) {
+                commit('setInstalled', res.data.IsInstalled)
             }
-            if (res.hasOwnProperty('user')) {
+            if (res.hasOwnProperty('User')) {
                 commit('setUser', res.data.User)
             }
-            if (res.hasOwnProperty('authenticated')) {
+            if (res.hasOwnProperty('Authenticated')) {
                 commit('setAuthenticated', res.data.Authenticated)
             }
         })
