@@ -1,0 +1,22 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace OpenPrintServerVueNet.Server.Models
+{
+    public class Consumables
+    {
+        [Key]
+        public UInt64 Id { get; set; }
+
+        public int Type { get; set; }
+
+        public string? Name { get; set; }
+
+        public string? Color { get; set; }
+
+        public string? Remains { get; set; }
+
+        public string? Capacity { get; set; }
+
+        public Printer? Printer { get; set; }
+    }
+}

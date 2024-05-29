@@ -17,9 +17,7 @@ namespace OpenPrintServerVueNet.Server.Contexts
 
         public DbSet<PrinterPort> PrinterPorts { get; set; }
 
-        public DbSet<SnmpVariable> SnmpVariables { get; set; }
-
-        public DbSet<SnmpValue> SnmpValues { get; set; }
+        public DbSet<Consumables> Consumables { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
@@ -33,6 +31,9 @@ namespace OpenPrintServerVueNet.Server.Contexts
             modelBuilder.Entity<Printer>()
                 .HasMany(c => c.Ports)
                 .WithOne(o => o.Printer);
+
+            modelBuilder.Entity<Printer>()
+                .HasMany(c => c.Consumables);
 
             modelBuilder.Entity<Job>()
                 .HasOne(j => j.Printer);
