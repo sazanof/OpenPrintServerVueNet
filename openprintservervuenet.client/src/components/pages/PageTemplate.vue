@@ -27,7 +27,9 @@ export default {
                 <slot name="actions" />
             </div>
         </div>
-        <slot />
+        <div class="mt-2">
+            <slot />
+        </div>
     </VSheet>
 </template>
 
@@ -38,7 +40,7 @@ export default {
     .actions {
         position: absolute;
         right: 0;
-        top: 0;
+        top: -18px;
         z-index: 10;
     }
 }

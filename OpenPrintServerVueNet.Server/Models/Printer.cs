@@ -86,10 +86,9 @@ namespace OpenPrintServerVueNet.Server.Models
 
         public string? OperatorMessage { get; set; }
 
-        public ICollection<Consumables>? Consumables { get; set; }
+        public ICollection<Consumables> Consumables { get; set; }
 
-        public ICollection<PrinterPort>? Ports { get; set; }
-
+        public ICollection<PrinterPort> Ports { get; set; }
 
         public Printer()
         {

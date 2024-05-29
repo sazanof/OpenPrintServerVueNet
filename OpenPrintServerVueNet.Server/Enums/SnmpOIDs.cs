@@ -21,4 +21,3 @@
         public static readonly string OperatorMessage = "1.3.6.1.2.1.43.16.5.1.2";
     }
 }
-}

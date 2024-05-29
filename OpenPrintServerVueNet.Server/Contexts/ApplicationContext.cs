@@ -32,9 +32,6 @@ namespace OpenPrintServerVueNet.Server.Contexts
                 .HasMany(c => c.Ports)
                 .WithOne(o => o.Printer);
 
-            modelBuilder.Entity<Printer>()
-                .HasMany(c => c.Consumables);
-
             modelBuilder.Entity<Job>()
                 .HasOne(j => j.Printer);
         }

@@ -13,9 +13,9 @@ namespace OpenPrintServerVueNet.Server.Models
 
         public string? Color { get; set; }
 
-        public string? Remains { get; set; }
+        public int Remains { get; set; }
 
-        public string? Capacity { get; set; }
+        public int Capacity { get; set; }
 
         public Printer? Printer { get; set; }
     }

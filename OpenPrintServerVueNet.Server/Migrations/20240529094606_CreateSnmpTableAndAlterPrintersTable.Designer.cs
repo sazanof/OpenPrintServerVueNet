@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OpenPrintServerVueNet.Server.Contexts;
 
@@ -11,9 +12,11 @@ using OpenPrintServerVueNet.Server.Contexts;
 namespace OpenPrintServerVueNet.Server.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20240529094606_CreateSnmpTableAndAlterPrintersTable")]
+    partial class CreateSnmpTableAndAlterPrintersTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -302,8 +305,8 @@ namespace OpenPrintServerVueNet.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
 
-                    b.Property<int>("Capacity")
-                        .HasColumnType("int");
+                    b.Property<string>("Capacity")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Color")
                         .HasColumnType("nvarchar(max)");
@@ -314,8 +317,8 @@ namespace OpenPrintServerVueNet.Server.Migrations
                     b.Property<int?>("PrinterId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Remains")
-                        .HasColumnType("int");
+                    b.Property<string>("Remains")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
