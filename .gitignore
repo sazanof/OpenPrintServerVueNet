@@ -9,4 +9,4 @@
 .vs
 **/wwwroot
 **/appsettings.json
-**/Properities/PublishProfiles
+**/Properties/PublishProfiles/
