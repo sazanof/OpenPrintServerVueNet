@@ -64,12 +64,39 @@ namespace OpenPrintServerVueNet.Server.Models
 
         public UInt32? VerticalResolution { get; set; }
 
-        public ICollection<PrinterPort>? Ports { get; set; }
+        public string? SnmpName { get; set; }
 
+        public string? SnmpManufacturerOID { get; set; } 
+
+        public string? SnmpUptime { get; set; }
+
+        public string? SnmpContact { get; set; }
+        
+        public string? SnmpFQDN { get; set; }
+
+        public string? SnmpLocation { get; set; }
+
+        public string? SnmpSystemName { get; set; }
+
+        public string? SnmpSerialNumber { get; set; }
+
+        public UInt64? SnmpCountTotal { get; set; }
+
+        public UInt64? SnmpCountUptime { get; set; }
+
+        public string? OperatorMessage { get; set; }
+
+        public ICollection<Job> Jobs { get; set; }
+
+        public ICollection<Consumables> Consumables { get; set; }
+
+        public ICollection<PrinterPort> Ports { get; set; }
 
         public Printer()
         {
             Ports = new List<PrinterPort>();
+            Consumables = new List<Consumables>();
+            Jobs = new List<Job>(); 
         }
 
        

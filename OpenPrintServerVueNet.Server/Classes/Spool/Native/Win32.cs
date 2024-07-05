@@ -88,9 +88,6 @@ namespace OpenPrintServerVueNet.Classes.Spool.Native {
                 var AllRecords = Parsed.Data.ToRecords().ToList();
                 FreePrinterNotifyInfo(NotifyPointer);
 
-
-
-
                 foreach (var Record in AllRecords) {
                     if(Record is PrintDeviceRecord V1) {
                         if (!PrintDevices.TryGetValue(V1.DeviceID, out var Container)) {

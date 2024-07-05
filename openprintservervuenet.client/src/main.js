@@ -1,3 +1,4 @@
+import '@/styles/main.scss'
 import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
 
@@ -61,7 +62,11 @@ const vuetify = createVuetify({
         },
         VBtn: {
             variant: 'flat',
-            color: 'cyan-darken-3'
+            color: 'blue-darken-2'
+        },
+        VTabs: {
+            variant: 'flat',
+            color: 'blue-darken-2'
         },
         VTable: {
             hover: true,
@@ -80,7 +85,7 @@ const vuetify = createVuetify({
             }
         },
         VNavigationDrawer: {
-            color: 'cyan-darken-3',
+            color: 'blue-darken-2',
             VBtn: {
                 variant: 'text',
                 color: 'white',

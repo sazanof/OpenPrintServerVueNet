@@ -14,6 +14,21 @@ export default {
     setPrinters(state, printers) {
         state.printers = printers
     },
+    addPrinter(state, printer) {
+        const found = state.printers.findIndex(_printer => _printer.Id === printer.Id)
+        if (found === -1) {
+            state.printers.push(printer)
+        }
+    },
+    updatePrinter(state, printer) {
+        const found = state.printers.findIndex(_printer => _printer.Id === printer.Id)
+        if (found >= 0) {
+            state.printers[found] = printer
+        }
+    },
+    deletePrinter(state, id) {
+        state.printers = state.printers.filter(p => p.Id !== id)
+    },
     setSignalR(state, signal) {
         state.signal = signal
     },
@@ -22,6 +37,9 @@ export default {
     },
     setJobs(state, jobs) {
         state.jobs = jobs
+    },
+    removePrinterJobs(state, id) {
+        state.jobs = state.jobs.filter(job => job.PrinterId !== id)
     },
     addJob(state, job) {
         let existingIndex = state.jobs.Results.findIndex(j => j.Id === job.Id)

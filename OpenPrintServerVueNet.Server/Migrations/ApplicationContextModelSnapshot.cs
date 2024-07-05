@@ -294,6 +294,39 @@ namespace OpenPrintServerVueNet.Server.Migrations
                     b.ToTable("Config");
                 });
 
+            modelBuilder.Entity("OpenPrintServerVueNet.Server.Models.Consumables", b =>
+                {
+                    b.Property<decimal>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(20,0)");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
+
+                    b.Property<int>("Capacity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Color")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PrinterId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Remains")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PrinterId");
+
+                    b.ToTable("Consumables");
+                });
+
             modelBuilder.Entity("OpenPrintServerVueNet.Server.Models.Printer", b =>
                 {
                     b.Property<int>("Id")
@@ -353,6 +386,9 @@ namespace OpenPrintServerVueNet.Server.Migrations
                     b.Property<bool?>("Network")
                         .HasColumnType("bit");
 
+                    b.Property<string>("OperatorMessage")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PaperSizesSupported")
                         .HasColumnType("nvarchar(max)");
 
@@ -376,6 +412,36 @@ namespace OpenPrintServerVueNet.Server.Migrations
 
                     b.Property<bool?>("Shared")
                         .HasColumnType("bit");
+
+                    b.Property<string>("SnmpContact")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("SnmpCountTotal")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<decimal?>("SnmpCountUptime")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<string>("SnmpFQDN")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SnmpLocation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SnmpManufacturerOID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SnmpName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SnmpSerialNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SnmpSystemName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SnmpUptime")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SystemName")
                         .HasColumnType("nvarchar(max)");
@@ -402,6 +468,9 @@ namespace OpenPrintServerVueNet.Server.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HostAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MacAddress")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -543,7 +612,18 @@ namespace OpenPrintServerVueNet.Server.Migrations
                 {
                     b.HasOne("OpenPrintServerVueNet.Server.Models.Printer", "Printer")
                         .WithMany("Jobs")
-                        .HasForeignKey("PrinterId");
+                        .HasForeignKey("PrinterId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Printer");
+                });
+
+            modelBuilder.Entity("OpenPrintServerVueNet.Server.Models.Consumables", b =>
+                {
+                    b.HasOne("OpenPrintServerVueNet.Server.Models.Printer", "Printer")
+                        .WithMany("Consumables")
+                        .HasForeignKey("PrinterId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Printer");
                 });
@@ -552,13 +632,16 @@ namespace OpenPrintServerVueNet.Server.Migrations
                 {
                     b.HasOne("OpenPrintServerVueNet.Server.Models.Printer", "Printer")
                         .WithMany("Ports")
-                        .HasForeignKey("PrinterId");
+                        .HasForeignKey("PrinterId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Printer");
                 });
 
             modelBuilder.Entity("OpenPrintServerVueNet.Server.Models.Printer", b =>
                 {
+                    b.Navigation("Consumables");
+
                     b.Navigation("Jobs");
 
                     b.Navigation("Ports");

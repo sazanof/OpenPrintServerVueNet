@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace OpenPrintServerVueNet.Classes.Spool.Native.NotifyInfo {
+﻿namespace OpenPrintServerVueNet.Classes.Spool.Native.NotifyInfo {
     [Flags]
     public enum PrintDeviceStatus {
-
+        None = 0,
         Paused = 1,
         Error = 2,
         Pending_Deletion = 4,

@@ -74,6 +74,8 @@ namespace OpenPrintServerVueNet.Models
 
         public bool? Synced { get; set; }
 
+        public int? PrinterId { get; set; }
+
         public Printer? Printer { get; set; }
     }
 }

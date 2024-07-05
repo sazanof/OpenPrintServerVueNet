@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OpenPrintServerVueNet.Server.Classes;
 using OpenPrintServerVueNet.Server.Contexts;
+using OpenPrintServerVueNet.Server.Enums;
 using OpenPrintServerVueNet.Server.Models;
 using System.Data.Common;
 using System.Management;
+using System.Net;
 using System.Reflection.Metadata;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -12,7 +15,7 @@ namespace OpenPrintServerVueNet.Server.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("/api/printers/sync")]
+    [Route("/api/printers")]
     public class PrinterController : Controller
     {
         private readonly ApplicationContext _db;
@@ -22,12 +25,24 @@ namespace OpenPrintServerVueNet.Server.Controllers
             _db = db;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> SyncPrinters()
+        public Snmp? snmp = null;
+
+        [HttpGet("sync/{id?}")]
+        public async Task<IActionResult> SyncPrinters(int id = 0)
         {
             return await Task.Run(() =>
             {
-                var searcher = new ManagementObjectSearcher("SELECT *  FROM Win32_Printer");
+                var query = $"SELECT *  FROM Win32_Printer";
+                if(id > 0)
+                {
+                    var founded = _db.Printers.Find(id);
+                    if(founded != null)
+                    {
+                        query += $" Where Name = '{founded.Name}'";
+                    }
+                }
+                //return Ok(query);
+                var searcher = new ManagementObjectSearcher(query);
                 foreach (ManagementObject entry in searcher.Get())
                 {
                     var printer = new Printer()
@@ -90,17 +105,21 @@ namespace OpenPrintServerVueNet.Server.Controllers
                         {
                             _db.PrinterPorts.AddRange(ports);
                         }
+
                     }
                     catch (Exception e)
                     {
                         Console.WriteLine(e.Message);
                     }
 
+                    Printer PRNT;
 
                     var current = _db.Printers.FirstOrDefault(p => p.DeviceID == printer.DeviceID);
+
                     if (current == null)
                     {
                         _db.Printers.Add(printer);
+                        PRNT = printer;
                     }
                     else
                     {
@@ -116,22 +135,158 @@ namespace OpenPrintServerVueNet.Server.Controllers
                         current.Default = printer.Default;
                         current.Network = printer.Network;
                         current.Name = printer.Name;
+
+                        PRNT = current;
                     }
+
+                    var targetPort = _db.PrinterPorts.FirstOrDefault(_port => _port.Name == PRNT.PortName);
+
+                    if (targetPort != null)
+                    {
+                        try
+                        {
+                            Console.WriteLine($"\r\nFound port {targetPort.Name}\r\n");
+
+                            var ip = IPAddress.Parse(targetPort.HostAddress);
+                            var snmp = new Snmp(ip, Lextm.SharpSnmpLib.VersionCode.V1);
+
+                            targetPort.MacAddress = Arp.LocateMacAddress(ip).ToString();
+
+                            var SnmpName = snmp.Get(SnmpOIDs.Name)?.First().Data.ToString();
+                            var SnmpSerialNumber = snmp.Get(SnmpOIDs.SerialNumber)?.First().Data.ToString();
+                            var SnmpSystemName = snmp.Get(SnmpOIDs.SystemName)?.First().Data.ToString();
+                            var SnmpFQDN = snmp.Get(SnmpOIDs.FQDN)?.First().Data.ToString();
+                            var SnmpLocation = snmp.Get(SnmpOIDs.Location)?.First().Data.ToString();
+                            var SnmpUptime = snmp.Get(SnmpOIDs.Uptime)?.First().Data.ToString();
+                            var SnmpManufacturerOID = snmp.Get(SnmpOIDs.VendorOID)?.First().Data.ToString();
+                            var SnmpCountTotal = snmp.Get(SnmpOIDs.CountTotal)?.First().Data.ToString();
+                            var SnmpCountUptime = snmp.Get(SnmpOIDs.CountUptime)?.First().Data.ToString();
+
+                            if (SnmpName != null) PRNT.SnmpName = SnmpName;
+                            if (SnmpSerialNumber != null) PRNT.SnmpSerialNumber = SnmpSerialNumber;
+                            if (SnmpSystemName != null) PRNT.SnmpSystemName = SnmpSystemName;
+                            if (SnmpLocation != null) PRNT.SnmpLocation = SnmpLocation;
+                            if (SnmpUptime != null) PRNT.SnmpUptime = SnmpUptime;
+                            if (SnmpCountTotal != null) PRNT.SnmpCountTotal = UInt64.Parse(SnmpCountTotal);
+                            if (SnmpCountUptime != null) PRNT.SnmpCountUptime = UInt64.Parse(SnmpCountUptime);
+
+                            var consumtables = PrepareConsumables(snmp, PRNT);
+                            foreach (var consumtable in consumtables)
+                            {
+                                var existing = _db.Consumables.FirstOrDefault(
+                                    cons => cons.Printer == consumtable.Printer && cons.Name == consumtable.Name
+                                    );
+                                if (existing == null)
+                                {
+                                    PRNT.Consumables.Add(consumtable);
+                                    Console.WriteLine($"\r\nAdd consumable:{consumtable.Name}\r\n");
+                                }
+                                else
+                                {
+                                    existing.Capacity = consumtable.Capacity;
+                                    existing.Remains = consumtable.Remains;
+                                    existing.Color = consumtable.Color;
+                                    existing.Type = consumtable.Type;
+                                    Console.WriteLine($"\r\nEdit consumable:{existing.Name}\r\n");
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.ToString());
+                        }
+                    }
+
                 }
                 _db.SaveChanges();
+
                 return Ok(_db.Printers);
             });
 
 
         }
 
-        [HttpGet("/api/printers")]
+        [HttpGet("")]
         public async Task<IActionResult> GetPrintersList()
         {
             return await Task.Run(() =>
             {
-                return Ok(_db.Printers.Include(x => x.Ports));
+                return Ok(_db.Printers.Include(x => x.Ports).Include(c => c.Consumables));
             });
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetPrinter(int id)
+        {
+            return await Task.Run(() =>
+            {
+                return Ok(
+                    _db.Printers
+                    .Include(x => x.Ports)
+                    .Include(c => c.Consumables)
+                    .FirstOrDefault(p => p.Id == id)
+                    );
+            });
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeletePrinter(int id)
+        {
+            var printer = _db.Printers.FirstOrDefault(p => p.Id == id);
+            _db.Remove<Printer>(printer);
+            _db.SaveChanges();
+            return Ok();
+        }
+
+        protected List<Consumables> PrepareConsumables(Snmp snmp, Printer printer)
+        {
+            var consumable = new List<Consumables>();
+
+            var consumableNames = snmp.Walk(SnmpOIDs.ConsumablesName);
+            var consumableTypes = snmp.Walk(SnmpOIDs.ConsumablesType);
+            var consumableRemains = snmp.Walk(SnmpOIDs.ConsumablesRemains);
+            var consumableTotal = snmp.Walk(SnmpOIDs.ConsumablesCapacity);
+            var consumableColor = snmp.Walk(SnmpOIDs.Color);
+
+            var i = 0;
+
+            foreach (var name in consumableNames)
+            {
+                consumable.Add(new Consumables()
+                {
+                    Name = name.Data.ToString(),
+                    Type = int.Parse(consumableTypes.ElementAt(i).Data.ToString()),
+                    Capacity = int.Parse(consumableTotal.ElementAt(i).Data.ToString()),
+                    Remains = int.Parse(consumableRemains.ElementAt(i).Data.ToString()),
+                    Printer = printer
+                });
+                i++;
+            }
+
+            var catriges = consumable.Where(item =>
+            {
+                int type = item.Type;
+                var allowedTypes = new int[] { (int)ConsumablesType.Toner, (int)ConsumablesType.Ink };
+                return allowedTypes.Contains(type);
+            });
+            var j = 0;
+            foreach (var cartrige in catriges)
+            {
+                cartrige.Color = consumableColor.ElementAt(j).Data.ToString();
+                var cidx = 0;
+                foreach (var cons in consumable)
+                {
+                    if (cons.Name == cartrige.Name)
+                    {
+                        consumable.ElementAt(cidx).Color = cons.Color;
+                        break;
+                    }
+                    cidx++;
+                }
+
+                j++;
+            }
+            return consumable;
         }
     }
 }

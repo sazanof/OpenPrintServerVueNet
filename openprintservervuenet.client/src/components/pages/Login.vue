@@ -38,7 +38,7 @@ export default {
             width="360"
             align="center">
             <template #title>
-                <Logo />
+                <Logo class="mt-4 mb-2" />
             </template>
             <template #text>
                 <VTextField

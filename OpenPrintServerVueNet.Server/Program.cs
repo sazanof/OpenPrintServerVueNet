@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using OpenPrintServerVueNet.Classes.Spool.Native.NotifyInfo;
 using OpenPrintServerVueNet.Server.Contexts;
 using OpenPrintServerVueNet.Server.Hibs;
 using OpenPrintServerVueNet.Server.Middlewares;
@@ -20,7 +23,9 @@ builder.Services.AddControllers().AddJsonOptions(opts =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddWindowsService();
 builder.Services.AddHostedService<JobBackgroundService>();
+//builder.Services.AddHostedService<ApiSendBackgroundService>();
 // �������� ������ ����������� �� ����� ������������
 var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 // ��������� �������� ApplicationContext � �������� ������� � ����������

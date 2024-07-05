@@ -17,6 +17,8 @@ namespace OpenPrintServerVueNet.Server.Contexts
 
         public DbSet<PrinterPort> PrinterPorts { get; set; }
 
+        public DbSet<Consumables> Consumables { get; set; }
+
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
             //Database.EnsureCreated();   // создаем базу данных при первом обращении
@@ -26,12 +28,33 @@ namespace OpenPrintServerVueNet.Server.Contexts
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Printer>()
-                .HasMany(c => c.Ports)
-                .WithOne(o => o.Printer);
+            /* modelBuilder.Entity<Printer>()
+                 .HasMany(c => c.Ports)
+                 .WithOne(o => o.Printer)
+                 .OnDelete(DeleteBehavior.Cascade);
+
+             modelBuilder.Entity<Printer>()
+                 .HasMany(c => c.Consumables)
+                 .WithOne(o => o.Printer)
+                 .OnDelete(DeleteBehavior.Cascade);*/
 
             modelBuilder.Entity<Job>()
-                .HasOne(j => j.Printer);
+            .HasOne(u => u.Printer)
+            .WithMany(c => c.Jobs)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Consumables>()
+            .HasOne(u => u.Printer)
+            .WithMany(c => c.Consumables)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<PrinterPort>()
+            .HasOne(u => u.Printer)
+            .WithMany(c => c.Ports)
+            .OnDelete(DeleteBehavior.Cascade);
+            /*
+                        modelBuilder.Entity<Job>()
+                            .HasOne(j => j.Printer);*/
         }
 
     }

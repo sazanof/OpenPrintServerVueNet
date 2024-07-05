@@ -1,7 +1,14 @@
-﻿using OpenPrintServerVueNet.Classes.DTO;
+﻿using Newtonsoft.Json.Linq;
+using OpenPrintServerVueNet.Classes.DTO;
 using OpenPrintServerVueNet.Classes.Spool.Native.DevMode;
 using OpenPrintServerVueNet.Classes.Spool.Native.NotifyInfo;
+using OpenPrintServerVueNet.Server.Classes.DTO;
+using OpenPrintServerVueNet.Server.Helpers;
+using OpenPrintServerVueNet.Server.Models;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+
+
 using System.Threading.Channels;
 
 namespace OpenPrintServerVueNet.Classes.Spool
@@ -12,8 +19,20 @@ namespace OpenPrintServerVueNet.Classes.Spool
         public PrintWatcher? watcher = null;
 
         public delegate void JobHandler(PrintJobDTO job);
-       
+
         public event JobHandler? OnJobReiceved;
+
+        public delegate void PrinterHandler(KeyValuePair<uint, PrintDeviceData> printer);
+
+        public event PrinterHandler? OnPrinterChanged;
+
+        public delegate void PrinterAddHandler(KeyValuePair<uint, PrintDeviceData> printer);
+
+        public event PrinterAddHandler? OnPrinterAdd;
+
+        public delegate void PrinterDeleteHandler(KeyValuePair<uint, PrintDeviceData> printer);
+
+        public event PrinterDeleteHandler? OnPrinterDelete;
 
         public void Start()
         {
@@ -26,7 +45,8 @@ namespace OpenPrintServerVueNet.Classes.Spool
                     //PrintDeviceEvents.Job,
                     //PrintDeviceEvents.Job_Add,
                     PrintDeviceEvents.Job_Add,
-                    PrintDeviceEvents.Job_Delete
+                    PrintDeviceEvents.Job_Delete,
+                    PrintDeviceEvents.Printer,
                 },
 
                 PrintJobFields = {
@@ -50,6 +70,7 @@ namespace OpenPrintServerVueNet.Classes.Spool
                     PrintJobField.Time,
                 },
                 PrintDeviceFields = {
+                    PrintDeviceField.Status,
                     PrintDeviceField.Printer_Name,
                     PrintDeviceField.Share_Name,
                     PrintDeviceField.Port_Name,
@@ -63,11 +84,11 @@ namespace OpenPrintServerVueNet.Classes.Spool
             });
             var Runner = Task.Run(() => ShowEvents(watcher.Events));
 
-           // Console.WriteLine("Press any key to stop the watcher");
-           // Console.ReadLine();
-//
+            // Console.WriteLine("Press any key to stop the watcher");
+            // Console.ReadLine();
+            //
             //Console.WriteLine("Press any key to exit");
-          //  Console.ReadLine();
+            //  Console.ReadLine();
         }
 
         public void Stop()
@@ -78,8 +99,9 @@ namespace OpenPrintServerVueNet.Classes.Spool
                 {
                     watcher.Dispose();
                 }
-            } catch { }
-            
+            }
+            catch { }
+
         }
 
 
@@ -110,7 +132,6 @@ namespace OpenPrintServerVueNet.Classes.Spool
 
         private async Task ShowEvents(ChannelReader<PrintWatcherEventArgs> Events)
         {
-            //LoggerManager.GetInstance().LogWarning("Task ShowEvents started");
             while (await Events.WaitToReadAsync())
             {
                 while (Events.TryRead(out var Item))
@@ -118,35 +139,63 @@ namespace OpenPrintServerVueNet.Classes.Spool
                     ShowEvents(Item);
                 }
             }
-
-
         }
 
         private void ShowEvents(PrintWatcherEventArgs e)
         {
-           // Console.WriteLine($@"TRIGGERED: {e.Cause} (Discarded: {e.Discarded})");
-           /*foreach (var Device in e.PrintDevices)
+            var list = new List<PrinterChangedDTO>();
+
+            Console.WriteLine($"\r\n============TRIGGERED: {e.Cause.ToString()} (Discarded: {e.Discarded})\r\n");
+
+
+            if (e.Cause.HasFlag(PrintDeviceEvents.Printer_Add))
             {
-                Console.WriteLine($@"  Print Device #{Device.Key}");
-                ShowRecords(Device.Value.PrintDevice_Records.Values);
-                Console.WriteLine();
-            }*/
+                foreach (var Device in e.PrintDevices)
+                {
+                    Console.WriteLine("Add printer {0}", Device.Value.PrintDevice_PrinterName().Value.ToString());
+                    OnPrinterAdd?.Invoke(Device);
+                }
+            }
+            if (e.Cause.HasFlag(PrintDeviceEvents.Printer_Delete))
+            {
+                foreach (var Device in e.PrintDevices)
+                {
+                    if (Device.Value.PrintDevice_Status().Value.HasFlag(PrintDeviceStatus.Pending_Deletion))
+                    {
+                        Console.WriteLine("Delete printer {0}", Device.Value.PrintDevice_PrinterName().Value.ToString());
+                        OnPrinterDelete?.Invoke(Device);
+                    }
+                }
+            }
+            if (e.Cause.HasFlag(PrintDeviceEvents.Printer_Set))
+            {
+                foreach (var Device in e.PrintDevices)
+                {
+                    OnPrinterChanged?.Invoke(Device);
+                }
+            }
 
             foreach (var Job in e.PrintJobs)
             {
-              
                 var job = new PrintJobDTO(Job.Key, Job.Value);
                 OnJobReiceved?.Invoke(job);
-                Console.WriteLine($@"  Print Job #{Job.Key}");
-                var opts = new JsonSerializerOptions();
-                opts.WriteIndented = true;
-                Console.WriteLine(JsonSerializer.Serialize(job, opts));
-
-                // ShowRecords(Job.Value.PrintJob_Records.Values);
-                //      Console.WriteLine();
+                Console.WriteLine($@" Print Job #{Job.Key}");
             }
+            //    case PrintDeviceEvents.Job_Add:
+            //     case PrintDeviceEvents.Job_Delete:
 
-          //  Console.WriteLine();
+
+
+            /* foreach (var Job in e.PrintJobs)
+             {
+                 var job = new PrintJobDTO(Job.Key, Job.Value);
+                 OnJobReiceved?.Invoke(job);
+                 Console.WriteLine($@" Print Job #{Job.Key}");
+             }*/
+
+
+
+            //  Console.WriteLine();
         }
     }
 }

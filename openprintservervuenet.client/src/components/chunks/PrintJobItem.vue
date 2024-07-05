@@ -1,8 +1,8 @@
 <script>
 import formatBytes from '@/js/helpers/formatBytes.js'
 import PaletteIcon from '@/components/chunks/PaletteIcon.vue'
-import { printerStatus } from '@/js/helpers/printerStatus.js'
 import moment from 'moment'
+import { printJobStatus } from '@/js/helpers/printJobStatus.js'
 
 export default {
     name: 'PrintJobItem',
@@ -20,8 +20,7 @@ export default {
     },
     computed: {
         submitted() {
-            console.log(new Date(this.job.Submitted))
-            return moment(this.job.Submitted).format('D.M.YYYY H:mm:ss')
+            return moment(this.job.Submitted).format('DD.MM.YYYY H:mm:ss')
         },
         bytesTotal() {
             return formatBytes(this.job.BytesTotal)
@@ -30,7 +29,7 @@ export default {
             return formatBytes(this.job.BytesPrinted)
         }
     },
-    methods: { printerStatus }
+    methods: { printJobStatus }
 }
 </script>
 
@@ -41,7 +40,7 @@ export default {
                 :icon="more?'mdi-chevron-up':'mdi-chevron-down'"
                 @click="more = !more" />
         </td>
-        <td>
+        <td class="name">
             <VIcon icon="mdi-printer" />
             <span class="ml-2">{{ job.PrinterName }}</span>
         </td>
@@ -114,7 +113,7 @@ export default {
                     <strong>{{ $t('Color') }}</strong>: <span>{{ job.Printer_Palette }}</span>
                 </div>
                 <div class="job-info-item">
-                    <strong>{{ $t('Status') }}</strong>: <span>{{ printerStatus(job.Status) }}</span>
+                    <strong>{{ $t('Status') }}</strong>: <span>{{ printJobStatus(job.Status) }}</span>
                 </div>
                 <div class="job-info-item">
                     <strong>{{ $t('Document') }}</strong>: <span>{{ job.Document }}</span>
@@ -175,5 +174,9 @@ export default {
         text-overflow: ellipsis;
     }
 
+}
+
+.name {
+    width: 200px;
 }
 </style>

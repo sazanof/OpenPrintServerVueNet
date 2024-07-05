@@ -1,96 +1,55 @@
-export const STATUS = {
-    Blocked: {
-        code: 512,
-        c: 'Blocked',
-        t: 'An error condition, possibly on a print job that precedes this one in the queue, blocked the print job.'
-    },
-    Completed: {
-        code: 4096,
-        c: 'Completed',
-        t: 'The print job is complete, including any post-printing processing.'
-    },
-    Deleted: {
-        code: 256,
-        c: 'Deleted',
-        t: 'The print job was deleted from the queue, typically after printing.'
-    },
+/**
+ * https://learn.microsoft.com/en-us/windows/win32/cimwin32prov/win32-printer
+ * Extended Printer Status
+ * 1 (0x1): Other
+ * 2 (0x2): Unknown
+ * 3 (0x3): Idle
+ * 4 (0x4): Printing
+ * 5 (0x5): Warming Up
+ * 6 (0x6): Stopped Printing
+ * 7: Offline
+ * 8 (0x8) : Paused
+ * 9 (0x9): Error
+ * 10 (0xA): Busy
+ * 11 (0xB): Not Available
+ * 12 (0xC): Waiting
+ * 13 (0xD): Processing
+ * 14 (0xE): Initialization
+ * 15: Power Save
+ * 16 (0x10): Pending Deletion
+ * 17 (0x11): I/O Active
+ * 18 (0x12): Manual Feed
+ */
 
-    Deleting: {
-        code: 4,
-        c: 'Deleting',
-        t: 'The print job is in the process of being deleted.'
-    },
-    Error: {
-        code: 2,
-        c: 'Error',
-        t: 'The print job is in an error state.'
-    },
-    None: {
-        code: 0,
-        c: 'None',
-        t: 'The print job has no specified state.'
-    },
+/**
+ * https://learn.microsoft.com/en-us/windows/win32/cimwin32prov/win32-printer
+ * Printer Status
+ * Other (1)
+ * Unknown (2)
+ * Idle (3)
+ * Printing (4)
+ * Warmup (5)
+ * Stopped Printing (6)
+ * Offline (7)
+ */
 
-    Offline: {
-        code: 32,
-        c: 'Offline',
-        t: 'The printer is offline.'
-    },
-
-    PaperOut: {
-        code: 64,
-        c: 'Paper out',
-        t: 'The printer is out of the required paper size.'
-    },
-
-    Paused: {
-        code: 1,
-        c: 'Paused',
-        t: 'The print job is paused.'
-    },
-
-    Printed: {
-        code: 128,
-        c: 'Printed',
-        t: 'The print job printed.'
-    },
-    Printing: {
-        code: 16,
-        c: 'Printing',
-        t: 'The print job is now printing.'
-    },
-
-    Restarted: {
-        code: 2048,
-        c: 'Restarted',
-        t: 'The print job was blocked but has restarted.'
-    },
-
-    Retained: {
-        code: 8192,
-        c: 'Retained',
-        t: 'The print job is retained in the print queue after printing.'
-    },
-
-    Spooling: {
-        code: 8,
-        c: 'Spooling',
-        t: 'The print job is spooling.'
-    },
-
-    UserIntervention: {
-        code: 1024,
-        c: 'User intervention',
-        t: 'The printer requires user action to fix an error condition.'
+export function getPrinterStatus(status) {
+    switch (status) {
+        case 1:
+            return 'Other'
+        case 2:
+            return 'Unknown'
+        case 3:
+            return 'Idle'
+        case 4:
+            return 'Printing'
+        case 5:
+            return 'Warming up'
+        case 6:
+            return 'Stopped printing'
+        case 7:
+            return 'Offline'
+        default:
+            return 'Other'
     }
-}
-
-export function printerStatus(_status) {
-    let statuses = []
-    Object.values(STATUS).forEach((status) => {
-        if (_status & status.code) {
-            statuses.unshift(status)
-        }
-    })
-    return statuses
 }

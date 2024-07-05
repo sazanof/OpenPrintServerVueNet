@@ -11,13 +11,13 @@ export default {
      */
     async install({ commit }, data) {
         return await axios.post('/api/install', data).then(res => {
-            if (res.data.hasOwnProperty('isInstalled')) {
-                commit('setInstalled', res.data.isInstalled)
+            if (res.data.hasOwnProperty('IsInstalled')) {
+                commit('setInstalled', res.data.IsInstalled)
             }
-            if (res.hasOwnProperty('user')) {
+            if (res.hasOwnProperty('User')) {
                 commit('setUser', res.data.User)
             }
-            if (res.hasOwnProperty('authenticated')) {
+            if (res.hasOwnProperty('Authenticated')) {
                 commit('setAuthenticated', res.data.Authenticated)
             }
         })
@@ -88,10 +88,27 @@ export default {
             commit('setLoading', false)
         })
     },
-    async syncPrinters({ commit }) {
+    async getPrinter({ commit }, id) {
         commit('setLoading', true)
-
-        return await axios.get('/api/printers/sync').then(res => {
+        return await axios.get(`/api/printers/${id}`).then(res => {
+            return res.data
+        }).finally(() => {
+            commit('setLoading', false)
+        })
+    },
+    async deletePrinter({ commit }, id) {
+        commit('setLoading', true)
+        return await axios.delete(`/api/printers/${id}`).then(res => {
+            commit('deletePrinter', id)
+            commit('removePrinterJobs', id)
+            return res.data
+        }).finally(() => {
+            commit('setLoading', false)
+        })
+    },
+    async syncPrinters({ commit }, id = null) {
+        commit('setLoading', true)
+        return await axios.get(id === null ? '/api/printers/sync' : `/api/printers/sync/${id}`).then(res => {
             commit('setPrinters', res.data)
             return res.data
         }).finally(() => {
@@ -106,6 +123,21 @@ export default {
             const _job = JSON.parse(job)
             commit('addJob', _job)
         })
+        hubConnection.on('on.printer.changed', function (printer) {
+            const _printer = JSON.parse(printer)
+            commit('updatePrinter', _printer)
+            console.log('Update printer', _printer)
+        })
+        hubConnection.on('on.printer.add', function (printer) {
+            const _printer = JSON.parse(printer)
+            commit('addPrinter', _printer)
+            console.log('on.printer.add', _printer)
+        })
+        hubConnection.on('on.printer.delete', function (printer) {
+            const _printer = JSON.parse(printer)
+            commit('deletePrinter', _printer.Id)
+            console.log('on.printer.delete', _printer)
+        })
         hubConnection.start()
             .then(() => {
                 commit('setConnected', true)
@@ -118,9 +150,9 @@ export default {
         })
         commit('setSignalR', hubConnection)
     },
-    async getJobs({ commit }, page = 1) {
+    async getJobs({ commit }, filter = 1) {
         commit('setLoading', true)
-        await axios.get(`/api/jobs/page/${page}`).then(res => {
+        await axios.post('/api/jobs', filter).then(res => {
             commit('setJobs', res.data)
         }).finally(() => {
             commit('setLoading', false)
@@ -138,6 +170,22 @@ export default {
         commit('setLoading', true)
         await axios.post('/api/config', data).then(res => {
             commit('setConfig', res.data)
+            return res.data
+        }).finally(() => {
+            commit('setLoading', false)
+        })
+    },
+    async getUsers({ commit }) {
+        commit('setLoading', true)
+        return await axios.get('/api/users').then(res => {
+            return res.data
+        }).finally(() => {
+            commit('setLoading', false)
+        })
+    },
+    async addUser({ commit }, data) {
+        commit('setLoading', true)
+        return await axios.post('/api/users', data).then(res => {
             return res.data
         }).finally(() => {
             commit('setLoading', false)

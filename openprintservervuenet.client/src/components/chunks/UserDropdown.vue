@@ -59,9 +59,19 @@ export default {
                         width="100%"
                         value="settings"
                         color="blue-grey-darken-3"
-                        :to="{name:'settings'}"
+                        :to="{name:'users'}"
                         prepend-icon="mdi-account-multiple">
                         {{ $t('Users') }}
+                    </VBtn>
+                    <VBtn
+                        :rounded="0"
+                        variant="text"
+                        width="100%"
+                        value="settings"
+                        color="blue-grey-darken-3"
+                        prepend-icon="mdi-logout"
+                        @click="$store.dispatch('logOut')">
+                        {{ $t('Log out') }}
                     </VBtn>
                 </div>
             </VCardText>

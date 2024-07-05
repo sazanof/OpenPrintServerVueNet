@@ -31,7 +31,7 @@ export default {
             icon="mdi-tray-full" />
         <template #prepend>
             <Logo
-                :width="36"
+                :width="40"
                 class="px-1 py-3" />
         </template>
     </VNavigationDrawer>

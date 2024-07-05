@@ -1,10 +1,12 @@
 <script>
 import PageTemplate from '@/components/pages/PageTemplate.vue'
 import { createSuccessNotification } from '@/js/helpers/notificationHelper.js'
+import PrinterItem from '@/components/chunks/PrinterItem.vue'
 
 export default {
     name: 'Printers',
     components: {
+        PrinterItem,
         PageTemplate
     },
     computed: {
@@ -31,42 +33,10 @@ export default {
 <template>
     <PageTemplate :title="$t('Printers')">
         <template #default>
-            <VList>
-                <VListItem
-                    v-for="printer in printers"
-                    :key="printer.id"
-                    :value="printer"
-                    lines="three">
-                    <template #title>
-                        {{ printer.Name }}
-                    </template>
-                    <template #subtitle>
-                        <div class="driver">
-                            {{ $t('Driver') }}: {{ printer.DriverName }}
-                        </div>
-                        <div
-                            v-if="printer.Ports"
-                            class="ports">
-                            <VChip
-                                v-for="port in printer.Ports"
-                                :key="port.Id"
-                                class="mt-2 mr-2"
-                                density="compact"
-                                color="success"
-                                :text="port.Name">
-                                <template #prepend>
-                                    <VIcon icon="mdi-ip" />
-                                </template>
-                            </VChip>
-                        </div>
-                    </template>
-                    <template #append>
-                        <VBtn
-                            icon="mdi-trash-can"
-                            color="error" />
-                    </template>
-                </VListItem>
-            </VList>
+            <PrinterItem
+                v-for="printer in printers"
+                :key="printer.id"
+                :printer="printer" />
         </template>
         <template #actions>
             <VBtn

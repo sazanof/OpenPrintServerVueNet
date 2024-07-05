@@ -13,7 +13,7 @@ export default {
 <template>
     <div class="logo">
         <img
-            src="../../assets/printer.png"
+            src="../../assets/logo-mini.svg"
             :width="width">
     </div>
 </template>
@@ -22,11 +22,13 @@ export default {
 .logo {
     display: inline-flex;
     align-items: center;
-    text-align: center;
+    justify-content: center;
 
     img {
-        max-width: 200px;
+        max-width: 100%;
         height: auto;
+        display: block;
+        margin: 0 auto;
     }
 }
 </style>

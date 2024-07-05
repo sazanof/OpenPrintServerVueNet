@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OpenPrintServerVueNet.Classes.Spool.Native.NotifyInfo;
 using OpenPrintServerVueNet.Models;
 using OpenPrintServerVueNet.Server.Classes;
 using OpenPrintServerVueNet.Server.Contexts;
+using OpenPrintServerVueNet.Server.Payload;
 
 namespace OpenPrintServerVueNet.Server.Controllers
 {
@@ -21,12 +23,22 @@ namespace OpenPrintServerVueNet.Server.Controllers
         }
 
         // GET: JobsController
-        [HttpGet("page/{page}")]
-        public PaginationResults<Job> Get(int page)
+        [HttpPost]
+        public PaginationResults<Job> Get(GetResultsPayload resultsPayload)
         {
-            return new PaginationResults<Job>(db.Jobs
+            var res = db.Jobs
                 .Include(j => j.Printer)
-                .OrderByDescending(j => j.Id), page, 50);
+                .OrderByDescending(j => j.Id);
+            if (resultsPayload.Id != null && resultsPayload.Id > 0)
+            {
+                var printer = db.Printers.Find(resultsPayload.Id);
+                if (printer != null)
+                {
+                    res = (IOrderedQueryable<Job>)res.Where(j => j.Printer == printer);
+                }
+
+            }
+            return new PaginationResults<Job>(res, resultsPayload.Page, resultsPayload.Limit);
         }
 
         [HttpGet("{id}")]
@@ -35,6 +47,12 @@ namespace OpenPrintServerVueNet.Server.Controllers
             return Ok(db.Jobs
                 .Include(j => j.Printer)
                 .FirstOrDefault(j => j.Id == id));
+        }
+
+        [HttpGet("status/synced/{yn}")]
+        public IActionResult GetPrintedJobs(string yn)
+        {
+            return Ok(db.Jobs.Include(i => i.Printer).Where(j => j.Synced == (yn == "y")));
         }
     }
 }
