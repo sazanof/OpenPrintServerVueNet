@@ -10,3 +10,4 @@
 **/wwwroot
 **/appsettings.json
 **/Properties/PublishProfiles/
+**/OpenPrintServerVueNet.Server.csproj.user
