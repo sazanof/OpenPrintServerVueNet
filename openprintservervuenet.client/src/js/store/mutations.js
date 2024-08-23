@@ -50,6 +50,12 @@ export default {
             console.log('update job', job, existingIndex)
         }
     },
+    setSync(state, sync){
+        state.syncRunning = sync
+    },
+    setSyncStatus(state, status){
+        state.syncStatus = status
+    },
     deleteJob(state, job) {
         state.jobs.Results.splice(state.jobs.Results.indexOf(job), 1)
     },

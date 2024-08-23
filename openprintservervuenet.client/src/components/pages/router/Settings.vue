@@ -45,7 +45,7 @@ export default {
             const data = Object.keys(this.config).map((key, index) => {
                 return {
                     Key: key,
-                    Value: this.config[key]
+                    Value: this.config[key] === false ? 'false' : this.config[key]
                 }
             })
             await this.$store.dispatch('saveConfig', data).then(() => {

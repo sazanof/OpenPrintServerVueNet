@@ -28,16 +28,6 @@ namespace OpenPrintServerVueNet.Server.Contexts
         {
             base.OnModelCreating(modelBuilder);
 
-            /* modelBuilder.Entity<Printer>()
-                 .HasMany(c => c.Ports)
-                 .WithOne(o => o.Printer)
-                 .OnDelete(DeleteBehavior.Cascade);
-
-             modelBuilder.Entity<Printer>()
-                 .HasMany(c => c.Consumables)
-                 .WithOne(o => o.Printer)
-                 .OnDelete(DeleteBehavior.Cascade);*/
-
             modelBuilder.Entity<Job>()
             .HasOne(u => u.Printer)
             .WithMany(c => c.Jobs)

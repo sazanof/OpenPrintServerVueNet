@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace OpenPrintServerVueNet.Classes.DTO
+﻿namespace OpenPrintServerVueNet.Classes.DTO
 {
     public class PrinterPortDTO
     {
-        public string Name { get; set; }
+        public int Id { get; set; }
+        public int? PrinterId { get; set; }
+        public string? Name { get; set; }
+        public string? HostAddress { get; set; }
+        public string? MacAddress { get; set; }
+        public string? Description { get; set; }
     }
 }

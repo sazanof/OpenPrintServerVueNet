@@ -13,6 +13,12 @@ export default {
     isLoading(state) {
         return state.loading
     },
+    isSyncRunning(state){
+      return state.syncRunning
+    },
+    getSyncStatus(state){
+      return state.syncStatus
+    },
     getPrinters(state) {
         return state.printers
     },

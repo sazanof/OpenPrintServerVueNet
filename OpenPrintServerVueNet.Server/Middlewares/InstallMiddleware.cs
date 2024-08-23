@@ -19,8 +19,8 @@ namespace OpenPrintServerVueNet.Server.Middlewares
             {
                 if (!httpContext.Request.Path.StartsWithSegments("/api/install"))
                 {
-                    var isInstalled = applicationContext.Config.FirstOrDefault(conf => conf.Key == ConfigEnum.IsInstalled);
-                    if (isInstalled == null || isInstalled.Value != "true")
+                    var isInstalled = applicationContext.Config.FirstOrDefault(conf => conf.Key == ConfigEnum.IsInstalled); // todo maybe delete this
+                    if (isInstalled == null || isInstalled.Value != "true") // todo maybe delete this
                     {
                         httpContext.Response.StatusCode = 403;
                         await httpContext.Response.WriteAsJsonAsync(

@@ -38,6 +38,8 @@ namespace OpenPrintServerVueNet.Server.Controllers
             createRoles();
 
             // Create a user
+            var current = db.Users.FirstOrDefault(u => u.UserName == data.Username);
+
             var hasher = new PasswordHasher<User>();
 
             var user = new User()
@@ -49,7 +51,7 @@ namespace OpenPrintServerVueNet.Server.Controllers
                 Lastname = data.Lastname
             };
 
-            var current = db.Users.FirstOrDefault(u => u.UserName == data.Username);
+            
             if (current == null)
             {
                 db.Users.Add(user);

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 
-namespace OpenPrintServerVueNet.Server.Hibs
+namespace OpenPrintServerVueNet.Server.Hubs
 {
     public class NotificationsHub : Hub
     {

@@ -38,8 +38,8 @@ export default {
             })
         },
         async sync() {
-            await this.$store.dispatch('syncPrinters', this.шв).then(() => {
-                this.$store.commit('addNotification', createSuccessNotification(this.$t('Synced')))
+            await this.$store.dispatch('syncPrinters').then(() => {
+                //this.$store.commit('addNotification', createSuccessNotification(this.$t('Synced')))
             })
             this.printer = await this.$store.dispatch('getPrinter', this.id)
         }

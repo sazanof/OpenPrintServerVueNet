@@ -3,7 +3,7 @@ using OpenPrintServerVueNet.Classes.DTO;
 using OpenPrintServerVueNet.Classes.Spool;
 using OpenPrintServerVueNet.Server.Contexts;
 using System.Text.Json;
-using OpenPrintServerVueNet.Server.Hibs;
+using OpenPrintServerVueNet.Server.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using System.Text.Json.Serialization;
 using OpenPrintServerVueNet.Server.Helpers;

@@ -43,6 +43,7 @@
   "Port MAC": "MAC адрес",
   "Printer": "Принтер",
   "Priority": "Приоритет",
+  "Printers sync job in process": "Задача синхронизации принтеров в процессе",
   "Printer name": "Имя принтера",
   "Printer {name}": "Принтер {name}",
   "Paper size": "Формат бумаги",

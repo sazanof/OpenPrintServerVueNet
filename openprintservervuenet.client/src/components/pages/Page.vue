@@ -2,23 +2,29 @@
 import Notifications from '@/components/chunks/Notifications.vue'
 import AppHeader from '@/components/chunks/AppHeader.vue'
 import AppNavigationDrawer from '@/components/chunks/AppNavigationDrawer.vue'
+import SyncStatus from '@/components/chunks/SyncStatus.vue'
 
 export default {
-    name: 'Page',
-    components: {
-        AppNavigationDrawer,
-        AppHeader,
-        Notifications
-    },
-    computed: {
-        loading() {
-            return this.$store.getters['isLoading']
-        }
-    },
-    async created() {
-        await this.$store.dispatch('getConfig')
-        this.$store.dispatch('createSignalR')
+  name: 'Page',
+  components: {
+    SyncStatus,
+    AppNavigationDrawer,
+    AppHeader,
+    Notifications
+  },
+  computed: {
+    loading() {
+      return this.$store.getters['isLoading']
     }
+  },
+  async created() {
+    this.$store.dispatch('createSignalR')
+    await this.$store.dispatch('getConfig')
+
+    setInterval(()=>{
+      this.$store.dispatch('getPrinterSyncStatus')
+    }, 10000)
+  } 
 
 }
 </script>
@@ -36,7 +42,7 @@ export default {
                 class="pa-6 layout-sheet"
                 height="100%"
                 width="100%">
-                <VProgressLinear
+                <VProgressLinear 
                     :active="loading"
                     indeterminate
                     height="4"
@@ -46,21 +52,22 @@ export default {
             </VSheet>
         </VLayout>
         <Notifications />
+        <SyncStatus />
     </VMain>
 </template>
 
 <style scoped lang="scss">
 
 .layout-sheet {
-    position: relative;
+  position: relative;
 
-    .progress-bar {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 11;
-    }
+  .progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 11;
+  }
 }
 
 </style>

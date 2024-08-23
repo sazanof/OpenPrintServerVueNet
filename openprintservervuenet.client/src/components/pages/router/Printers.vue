@@ -15,6 +15,9 @@ export default {
         },
         loading() {
             return this.$store.getters['isLoading']
+        },
+        syncRunning() {
+            return this.$store.getters['isSyncRunning']
         }
     },
     created() {
@@ -22,9 +25,7 @@ export default {
     },
     methods: {
         async sync() {
-            await this.$store.dispatch('syncPrinters').then(() => {
-                this.$store.commit('addNotification', createSuccessNotification(this.$t('Synced')))
-            })
+            await this.$store.dispatch('syncPrinters')
         }
     }
 }
@@ -40,8 +41,8 @@ export default {
         </template>
         <template #actions>
             <VBtn
-                :disabled="loading"
-                :loading="loading"
+                :disabled="loading || syncRunning"
+                :loading="loading || syncRunning"
                 :text="$t('Sync')"
                 prepend-icon="mdi-sync"
                 @click="sync" />

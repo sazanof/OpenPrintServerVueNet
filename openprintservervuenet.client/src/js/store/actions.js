@@ -1,6 +1,7 @@
 import axios from 'axios'
 import * as signalR from '@microsoft/signalr'
 import { hu } from 'vuetify/locale'
+import { createSuccessNotification } from '@/js/helpers/notificationHelper.js'
 
 export default {
     /**
@@ -108,11 +109,18 @@ export default {
     },
     async syncPrinters({ commit }, id = null) {
         commit('setLoading', true)
+        commit('setSync', true)
         return await axios.get(id === null ? '/api/printers/sync' : `/api/printers/sync/${id}`).then(res => {
-            commit('setPrinters', res.data)
+            commit('setSyncStatus', res.data.Status)
             return res.data
         }).finally(() => {
             commit('setLoading', false)
+        })
+    },
+    async getPrinterSyncStatus({ commit }, id = null) {
+        return await axios.get('/api/printers/sync/status').then(res => {
+            commit('setSyncStatus', res.data.Status)
+            return res.data
         })
     },
     createSignalR({ commit }) {
@@ -137,6 +145,18 @@ export default {
             const _printer = JSON.parse(printer)
             commit('deletePrinter', _printer.Id)
             console.log('on.printer.delete', _printer)
+        })
+        hubConnection.on('on.printers.sync.complete', function (sync) {
+            const _sync = JSON.parse(sync)
+            commit('setSync', false)
+            commit('setSyncStatus', _sync.Status)
+            commit('setPrinters',_sync.Printers)
+        })
+        hubConnection.on('on.printers.sync.status', function (sync) {
+            const _sync = JSON.parse(sync)
+            console.log('on.printers.sync.status', _sync)
+            commit('setSync', _sync.Status === 1)
+            commit('setSyncStatus', _sync.Status)
         })
         hubConnection.start()
             .then(() => {
